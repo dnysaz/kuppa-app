@@ -1,7 +1,7 @@
 const express = require('express');
 const wrap = require('../core/utils/RouteWrapper');
 
-const fx = {
+const kuppa = {
     // Core Router Instance
     router: wrap(express.Router()),
 
@@ -29,4 +29,4 @@ const fx = {
     }
 };
 
-module.exports = fx;
+module.exports = kuppa;

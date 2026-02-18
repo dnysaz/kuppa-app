@@ -6,7 +6,7 @@ const { execSync } = require('child_process');
 
 const args = process.argv.slice(2);
 const command = args[0];
-// Mengarah ke core/cli/Fx.js sesuai koreksi kamu
+// Mengarah ke core/cli/kuppa.js sesuai koreksi kamu
 const coreCliPath = path.join(process.cwd(), 'core/cli/Kuppa.js');
 
 /**
@@ -74,7 +74,7 @@ if (command === 'run:install') {
     syncCore(true);
 } else {
     if (fs.existsSync(coreCliPath)) {
-        // Memanggil engine utama di core/cli/Fx.js
+        // Memanggil engine utama di core/cli/kuppa.js
         require(coreCliPath);
     } else {
         console.log('\x1b[31m[Kuppa Error]:\x1b[0m Core engine not found.');

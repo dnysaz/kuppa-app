@@ -1,9 +1,9 @@
-const fx = require('./config');
-const route = fx.router;
+const kuppa = require('./config');
+const route = kuppa.router;
 
 // Aliasing for cleaner code
-const web = fx.controllers.web;
-const mw = fx.middleware;
+const web = kuppa.controllers.web;
+const mw = kuppa.middleware;
 
 /**
  * Kuppa Web Routes Configuration

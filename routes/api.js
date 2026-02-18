@@ -1,7 +1,7 @@
-const fx = require('./config');
-const route = fx.router;
-const api = fx.controllers.api;
-const mw = fx.middleware;
+const kuppa = require('./config');
+const route = kuppa.router;
+const api = kuppa.controllers.api;
+const mw = kuppa.middleware;
 
 /**
  * Kuppa API Routes

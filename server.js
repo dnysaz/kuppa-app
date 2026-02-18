@@ -20,11 +20,11 @@ try {
             output: process.stdout
         });
 
-        rl.question('Would you like to run "fx run:install" now? (y/n): ', (answer) => {
+        rl.question('Would you like to run "kuppa run:install" now? (y/n): ', (answer) => {
             if (answer.toLowerCase() === 'y') {
                 try {
                     console.log('Kuppa: Starting installation...');
-                    // Menjalankan fx.js langsung dari sini
+                    // Menjalankan kuppa.js langsung dari sini
                     execSync('node kuppa run:install', { stdio: 'inherit' });
                     console.log('\x1b[32m%s\x1b[0m', 'Kuppa: Core installed. Please restart the server.');
                 } catch (installError) {
