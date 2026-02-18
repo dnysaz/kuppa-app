@@ -26,7 +26,7 @@ const getEnv = (key, fallback) => {
 };
 
 const DEFAULT_REPO = "https://github.com/dnysaz/kuppa-core.git";
-const CORE_REPO = getEnv('Kuppa_CORE_REPO', DEFAULT_REPO);
+const CORE_REPO = getEnv('KUPPA_CORE_REPO', DEFAULT_REPO);
 
 const syncCore = (isUpdate = false) => {
     const corePath = path.join(process.cwd(), 'core');
@@ -62,7 +62,7 @@ const syncCore = (isUpdate = false) => {
             console.log('Kuppa: Created .env from .env.example.');
         }
     } catch (error) {
-        console.error(`Kuppa: Gagal sinkronisasi. Pastikan koneksi internet & repo tersedia.`);
+        console.error(`Kuppa: Failed to synchronize core engine! .`);
         if (fs.existsSync(tempPath)) fs.rmSync(tempPath, { recursive: true, force: true });
     }
 };
