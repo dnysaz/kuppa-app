@@ -14,8 +14,8 @@ class HomeController extends BaseController {
     static async index(process) {
         try {
             process.render('welcome', { 
-                title: 'Welcome Page!',
-                message: 'Welcome to Kuppa Framework' 
+                title: 'Hello Kuppa!',
+                message: 'The minimalist javascript supabase framework' 
             });
         } catch (err) {
             console.error('[Kuppa Error]', err.message);

@@ -1,5 +1,5 @@
 {{set "title" "Login | Kuppa"}}
-{{set "description" "Masuk ke akun Kuppa kamu untuk melanjutkan."}}
+{{set "description" "Login to your Kuppa account!"}}
 
 <div class="min-h-[70vh] flex items-center justify-center px-4">
     <div class="max-w-md w-full bg-white border border-gray-200  rounded-3xl p-10">
@@ -26,7 +26,7 @@
         </div>
         {{/if}}
 
-        <form action="/login" method="POST" class="space-y-6">
+        <form action="{{route 'login.post'}}" method="POST" class="space-y-6">
             {{!-- Email Input --}}
             <div>
                 <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
@@ -52,7 +52,7 @@
 
         <footer class="mt-8 text-center">
             <p class="text-sm text-gray-500">
-                Don't have an account? <a href="/register" class="text-black font-semibold hover:underline">Sign up</a>
+                Don't have an account? <a href="{{route 'register'}}" class="text-black font-semibold hover:underline">Sign up</a>
             </p>
         </footer>
     </div>

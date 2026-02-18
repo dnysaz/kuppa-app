@@ -9,7 +9,7 @@
             </h1>
             <p class="text-neutral-500 text-sm">{{description}}</p>
         </div>
-        <a href="/dashboard" class="text-xs font-bold text-neutral-400 hover:text-black">
+        <a href="{{route 'dashboard'}}" class="text-xs font-bold text-neutral-400 hover:text-black">
             Back to Dashboard
         </a>
     </header>
@@ -18,7 +18,7 @@
 
     <div class="gap-8">
         <div class="lg:col-span-2 bg-white border border-neutral-200 rounded-xl p-8 shadow-sm">
-            <form action="/dashboard/update-profile" method="POST" enctype="multipart/form-data" class="space-y-8">
+            <form action="{{route 'profile.update'}}" method="POST" enctype="multipart/form-data" class="space-y-8">
                 
                 {{!-- Avatar Upload Section --}}
                 <div class="flex flex-col space-y-4 mb-10">

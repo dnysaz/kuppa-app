@@ -15,7 +15,7 @@
                 {{/if}}
             </p>
         </div>
-        <a href="/dashboard" class="text-xs font-bold text-neutral-400 hover:text-black transition-colors">
+        <a href="{{route 'dashboard'}}" class="text-xs font-bold text-neutral-400 hover:text-black transition-colors">
             Back to Dashboard
         </a>
     </header>
@@ -34,7 +34,7 @@
         {{/if}}
 
         <div class="lg:col-span-2 bg-white border border-neutral-200 rounded-xl p-8 shadow-sm">
-            <form action="/dashboard/update-password" method="POST" class="space-y-8">
+            <form action="{{route 'profile.password.update'}}" method="POST" class="space-y-8">
                 
                 <div class="max-w-md space-y-6">
                     {{!-- Current Password --}}
