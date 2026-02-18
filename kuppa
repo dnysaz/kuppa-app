@@ -78,6 +78,6 @@ if (command === 'run:install') {
         require(coreCliPath);
     } else {
         console.log('\x1b[31m[Kuppa Error]:\x1b[0m Core engine not found.');
-        console.log('Run: \x1b[1mfx run:install\x1b[0m to download the core.');
+        console.log('Run: \x1b[1mkuppa run:install\x1b[0m to download the core.');
     }
 }

@@ -25,7 +25,7 @@ try {
                 try {
                     console.log('Kuppa: Starting installation...');
                     // Menjalankan fx.js langsung dari sini
-                    execSync('node fx.js run:install', { stdio: 'inherit' });
+                    execSync('node kuppa run:install', { stdio: 'inherit' });
                     console.log('\x1b[32m%s\x1b[0m', 'Kuppa: Core installed. Please restart the server.');
                 } catch (installError) {
                     console.error('Kuppa: Installation failed. Please run it manually.');
