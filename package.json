@@ -1,0 +1,37 @@
+{
+    "name": "kuppa-app",
+    "version": "1.0.0",
+    "kuppaVersion": "1.0.0",
+    "description": "Kuppa.js - The minimalist javascript supabase framework",
+    "main": "server.js",
+    "bin": {
+        "kuppa": "./kuppa"
+    },
+    "scripts": {
+        "dev": "nodemon server.js",
+        "start": "node server.js",
+        "postinstall": "node kuppa run:install",
+        "kuppa:install": "node kuppa run:install",
+        "kuppa:update": "node kuppa run:update",
+        "kuppa:build": "node kuppa run:build",
+        "make:controller": "node kuppa make:controller",
+        "make:model": "node kuppa make:model",
+        "make:middleware": "node kuppa make:middleware",
+        "migrate": "node kuppa migrate"
+    },
+    "dependencies": {
+        "@supabase/supabase-js": "^2.45.0",
+        "axios": "^1.13.5",
+        "bcrypt": "^5.1.1",
+        "cookie-parser": "^1.4.7",
+        "dotenv": "^17.3.1",
+        "express": "^5.0.0",
+        "hbs": "^4.2.0",
+        "multer": "^2.0.2"
+    },
+    "devDependencies": {
+        "connect-livereload": "^0.6.1",
+        "livereload": "^0.10.3",
+        "nodemon": "^3.1.0"
+    }
+}

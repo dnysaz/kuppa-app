@@ -1,0 +1,19 @@
+{
+  "watch": [
+    "server.js",
+    "core/**/*.js",
+    "app/**/*.js",
+    "routes/**/*.js",
+    "views/**/*.hbs",
+    ".env"
+  ],
+  "ext": "js,hbs,json,env",
+  "ignore": [
+    "node_modules/",
+    "public/",
+    "tests/",
+    "core/storage/"
+  ],
+  "delay": "100",
+  "legacyWatch": false
+}

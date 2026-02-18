@@ -1,0 +1,30 @@
+<footer class="bg-white py-10 mt-auto border-t border-neutral-50">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+            
+            {{!-- Left: Brand & Beta Tag --}}
+            <div class="flex items-center gap-3">
+                <span class="font-bold tracking-tighter text-black">Kuppa<span class="text-neutral-300">.js</span></span>
+                <span class="text-[10px] font-mono text-neutral-700 border border-neutral-200 px-1.5 py-0.5 rounded uppercase tracking-widest">
+                    {{ appVersion }}
+                </span>
+                {{!-- Real-time Render Speed --}}
+                <span class="text-[10px] font-mono text-green-600 bg-green-50 px-1.5 py-0.5 rounded tracking-tighter">
+                    {{ renderTime }}s
+                </span>
+            </div>
+
+            {{!-- Right: Minimalist Info --}}
+            <div class="flex items-center gap-6">
+                <div class="hidden md:block text-[10px] text-neutral-300 tracking-[0.2em] font-medium uppercase">
+                    The minimalist javascript supabase framework
+                </div>
+                <div class="h-3 w-[1px] bg-neutral-100 hidden md:block"></div>
+                <p class="text-[10px] text-neutral-400 font-mono italic">
+                    &copy; 2026. Built by Ketut Dana.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</footer>

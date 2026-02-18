@@ -1,0 +1,114 @@
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-xl border-b border-neutral-100 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex justify-between h-16 items-center">
+            {{!-- Left Side --}}
+            <div class="flex items-center gap-8">
+                <a href="/" class="group flex items-center gap-2">
+                    <span class="text-xl font-bold tracking-tighter text-black">Kuppa<span class="text-neutral-300 group-hover:text-black transition-colors">.js</span></span>
+                </a>
+                
+                <div class="hidden md:flex gap-6 text-[14px] font-medium text-neutral-700">
+                    <a href="{{route 'dashboard'}}" class="hover:text-black transition-colors py-1">Dashboard</a>                    
+                    <a href="/" class="hover:text-black transition-colors py-1">Docs</a>
+                    <a href="/" class="hover:text-black transition-colors py-1">Help</a>
+                </div>
+            </div>
+
+            {{!-- Right Side (Desktop) --}}
+            <div class="hidden md:flex items-center gap-6">
+                {{#if globalUser}}
+                    <div class="flex items-center gap-4">
+                        {{#if globalUser.name}}
+                            <span class="text-[12px] font-bold text-black tracking-tight">{{ globalUser.name }}</span>
+                        {{/if}}
+
+                        {{!-- Desktop Avatar --}}
+                        <div class="relative w-8 h-8 rounded-full bg-black flex items-center justify-center text-white font-bold text-[12px] border border-neutral-200 shadow-sm overflow-hidden">
+                            {{#if globalUser.avatar}}
+                                <img src="/uploads/{{globalUser.avatar}}" alt="Avatar" class="w-full h-full object-cover">
+                            {{else}}
+                                {{#if globalUser.name}}
+                                    {{slice globalUser.name 0 1}}
+                                {{else}}
+                                    {{slice globalUser.email 0 1}}
+                                {{/if}}
+                            {{/if}}
+                        </div>
+
+                        <div class="h-4 w-[1px] bg-neutral-200"></div>
+
+                        <form action="/logout" method="POST" class="m-0">
+                            <button type="submit" class="text-[14px] font-bold text-neutral-400 hover:text-black transition-colors">
+                                Sign Out
+                            </button>
+                        </form>
+                    </div>
+                {{else}}
+                    <a href="/login" class="text-[13px] font-medium text-neutral-500 hover:text-black transition-colors">Sign In</a>
+                    <a href="/register" class="px-5 py-2 bg-black text-white text-[12px] font-bold rounded-full hover:bg-neutral-800 transition-all shadow-lg shadow-black/10 active:scale-[0.98]">
+                        Join Now
+                    </a>
+                {{/if}}
+            </div>
+
+            {{!-- Mobile Menu Button --}}
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-button" class="p-2 text-black focus:outline-none hover:bg-neutral-50 rounded-lg transition-colors">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path id="burger-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8h16M4 16h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{!-- Mobile Menu --}}
+    <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur-xl border-b border-neutral-100 overflow-hidden transition-all duration-300">
+        <div class="px-4 py-6 space-y-4">
+            <a href="/dashboard" class="block text-sm font-bold text-neutral-900">Dashboard</a>
+            {{#if globalUser}}
+                <div class="pt-4 border-t border-neutral-100">
+                    <div class="flex items-center gap-3 mb-4">
+                        {{!-- Mobile Avatar --}}
+                        <div class="w-10 h-10 rounded-full bg-black flex items-center justify-center text-white font-bold text-xs overflow-hidden border border-neutral-200">
+                            {{#if globalUser.avatar}}
+                                <img src="/uploads/{{globalUser.avatar}}" alt="Avatar" class="w-full h-full object-cover">
+                            {{else}}
+                                {{#if globalUser.name}}
+                                    {{slice globalUser.name 0 1}}
+                                {{else}}
+                                    {{slice globalUser.email 0 1}}
+                                {{/if}}
+                            {{/if}}
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-black">{{#if globalUser.name}}{{ globalUser.name }}{{else}}User{{/if}}</p>
+                            <p class="text-[10px] text-neutral-500">{{ globalUser.email }}</p>
+                        </div>
+                    </div>
+                    <form action="/logout" method="POST">
+                        <button type="submit" class="w-full py-2 bg-neutral-100 text-black text-xs font-bold rounded-lg">Sign Out</button>
+                    </form>
+                </div>
+            {{else}}
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <a href="/login" class="flex items-center justify-center py-2 text-sm font-bold text-neutral-600 border border-neutral-200 rounded-lg">Sign In</a>
+                    <a href="/register" class="flex items-center justify-center py-2 text-sm font-bold text-white bg-black rounded-lg">Sign Up</a>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+</nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        if (menuButton && mobileMenu) {
+            menuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    });
+</script>

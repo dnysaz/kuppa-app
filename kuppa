@@ -1,0 +1,83 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
+
+const args = process.argv.slice(2);
+const command = args[0];
+// Mengarah ke core/cli/Fx.js sesuai koreksi kamu
+const coreCliPath = path.join(process.cwd(), 'core/cli/Kuppa.js');
+
+/**
+ * Helper: Ambil REPO dari .env jika ada
+ */
+const getEnv = (key, fallback) => {
+    const envPath = path.join(process.cwd(), '.env');
+    if (fs.existsSync(envPath)) {
+        const envContent = fs.readFileSync(envPath, 'utf8');
+        const lines = envContent.split('\n');
+        for (const line of lines) {
+            const [k, v] = line.split('=');
+            if (k && k.trim() === key) return v.trim();
+        }
+    }
+    return fallback;
+};
+
+const DEFAULT_REPO = "https://github.com/dnysaz/kuppa-core.git";
+const CORE_REPO = getEnv('Kuppa_CORE_REPO', DEFAULT_REPO);
+
+const syncCore = (isUpdate = false) => {
+    const corePath = path.join(process.cwd(), 'core');
+    const tempPath = path.join(process.cwd(), 'temp_core_sync');
+    const packagePath = path.join(process.cwd(), 'package.json');
+    const envPath = path.join(process.cwd(), '.env');
+    const envExamplePath = path.join(process.cwd(), '.env.example');
+
+    let targetVersion = 'main';
+    if (fs.existsSync(packagePath)) {
+        try {
+            const pkg = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+            if (pkg.KuppaVersion) targetVersion = pkg.KuppaVersion;
+        } catch (e) {}
+    }
+    
+    console.log(isUpdate ? `Kuppa: Updating core [${targetVersion}]...` : `Kuppa: Installing core [${targetVersion}]...`);
+
+    try {
+        if (fs.existsSync(tempPath)) fs.rmSync(tempPath, { recursive: true, force: true });
+        execSync(`git clone --branch ${targetVersion} --depth 1 ${CORE_REPO} "${tempPath}" --quiet`);
+        
+        if (fs.existsSync(corePath)) fs.rmSync(corePath, { recursive: true, force: true });
+        fs.renameSync(tempPath, corePath);
+        
+        const gitInternal = path.join(corePath, '.git');
+        if (fs.existsSync(gitInternal)) fs.rmSync(gitInternal, { recursive: true, force: true });
+
+        console.log(`Kuppa: Core engine synchronized successfully.`);
+
+        if (!fs.existsSync(envPath) && fs.existsSync(envExamplePath)) {
+            fs.copyFileSync(envExamplePath, envPath);
+            console.log('Kuppa: Created .env from .env.example.');
+        }
+    } catch (error) {
+        console.error(`Kuppa: Gagal sinkronisasi. Pastikan koneksi internet & repo tersedia.`);
+        if (fs.existsSync(tempPath)) fs.rmSync(tempPath, { recursive: true, force: true });
+    }
+};
+
+// --- Logic Utama ---
+if (command === 'run:install') {
+    syncCore(false);
+} else if (command === 'run:update') {
+    syncCore(true);
+} else {
+    if (fs.existsSync(coreCliPath)) {
+        // Memanggil engine utama di core/cli/Fx.js
+        require(coreCliPath);
+    } else {
+        console.log('\x1b[31m[Kuppa Error]:\x1b[0m Core engine not found.');
+        console.log('Run: \x1b[1mfx run:install\x1b[0m to download the core.');
+    }
+}

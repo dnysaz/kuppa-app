@@ -1,0 +1,12 @@
+{{!-- Sub-Menu / Tabs --}}
+<div class="flex items-center space-x-1 mb-8 border-b border-neutral-100">
+    <a href="{{route 'dashboard'}}" class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest border-b-2 {{#if (eq title 'Dashboard')}}border-black text-black{{else}}border-transparent text-neutral-400 hover:text-black{{/if}} transition-all">
+        Overview
+    </a>
+    <a href="{{route 'profile.edit'}}" class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest border-b-2 {{#if (eq title 'Edit Profile')}}border-black text-black{{else}}border-transparent text-neutral-400 hover:text-black{{/if}} transition-all">
+        Edit Profile
+    </a>
+    <a href="{{route 'profile.password'}}" class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest border-b-2 {{#if (eq title 'Update Password')}}border-black text-black{{else}}border-transparent text-neutral-400 hover:text-black{{/if}} transition-all">
+        Security
+    </a>
+</div>

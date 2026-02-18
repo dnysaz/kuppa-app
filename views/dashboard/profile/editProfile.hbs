@@ -1,0 +1,99 @@
+{{set "title" "Edit Profile"}}
+{{set "description" "Update your personal information and account settings."}}
+
+<div class="max-w-7xl mx-auto w-full px-4 py-24">
+    <header class="mb-16 flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-black mb-2 tracking-tighter">
+                {{title}}
+            </h1>
+            <p class="text-neutral-500 text-sm">{{description}}</p>
+        </div>
+        <a href="/dashboard" class="text-xs font-bold text-neutral-400 hover:text-black">
+            Back to Dashboard
+        </a>
+    </header>
+
+    {{> submenu}}
+
+    <div class="gap-8">
+        <div class="lg:col-span-2 bg-white border border-neutral-200 rounded-xl p-8 shadow-sm">
+            <form action="/dashboard/update-profile" method="POST" enctype="multipart/form-data" class="space-y-8">
+                
+                {{!-- Avatar Upload Section --}}
+                <div class="flex flex-col space-y-4 mb-10">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Profile Picture</label>
+                    <div class="flex items-center space-x-6">
+                        <div class="relative group cursor-pointer" onclick="document.getElementById('avatarInput').click()">
+                            <div class="w-24 h-24 rounded-full bg-black flex items-center justify-center text-white text-2xl font-bold border-2 border-neutral-100 shadow-xl overflow-hidden relative">
+                                {{#if userData.avatar}}
+                                    <img id="avatarPreview" src="/uploads/{{userData.avatar}}" class="w-full h-full object-cover">
+                                {{else}}
+                                    <div id="avatarPlaceholder" class="w-full h-full flex items-center justify-center bg-black">
+                                        {{#if userData.fullName}}{{slice userData.fullName 0 1}}{{else}}{{slice userData.email 0 1}}{{/if}}
+                                    </div>
+                                    <img id="avatarPreview" class="w-full h-full object-cover hidden">
+                                {{/if}}
+                                
+                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <button type="button" onclick="document.getElementById('avatarInput').click()" class="text-xs font-bold bg-neutral-100 px-4 py-2 rounded-lg hover:bg-neutral-200 transition-all">Change Photo</button>
+                            <p class="text-[10px] text-neutral-400 mt-2">JPG, PNG or WEBP. Max 2MB.</p>
+                        </div>
+                        <input type="file" id="avatarInput" name="avatar" class="hidden" accept="image/*" onchange="previewImage(this)">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-2">
+                        <label for="fullName" class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" value="{{ userData.fullName }}" class="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-lg text-sm font-semibold text-neutral-800 focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-black transition-all">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="email" class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">Email Address</label>
+                        <input type="email" id="email" name="email" value="{{ userData.email }}" readonly class="w-full px-4 py-3 bg-neutral-100 border border-neutral-200 rounded-lg text-sm font-semibold text-neutral-400 cursor-not-allowed">
+                    </div>
+                </div>
+
+                <div class="pt-8 border-t border-neutral-100 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-neutral-400 font-medium mb-1">Account ID</p>
+                        <p class="text-[10px] font-mono text-neutral-400">{{ userData.id }}</p>
+                    </div>
+                    <button type="submit" class="px-8 py-3 bg-black text-white text-xs font-bold uppercase tracking-widest rounded-lg hover:bg-neutral-800 transition-all shadow-lg shadow-black/10 active:scale-95">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(input) {
+        const preview = document.getElementById('avatarPreview');
+        const placeholder = document.getElementById('avatarPlaceholder');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (preview) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                }
+                if (placeholder) {
+                    placeholder.classList.add('hidden');
+                }
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
