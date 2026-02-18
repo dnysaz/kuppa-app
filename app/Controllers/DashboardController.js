@@ -101,7 +101,7 @@ class DashboardController extends BaseController {
      */
     static async password(process) {
         process.render('dashboard.profile.updatePass', {
-            title: 'Security Settings',
+            title: 'Update Password',
             description: 'Update your password!'
 
         });
@@ -119,7 +119,7 @@ class DashboardController extends BaseController {
             // 1. Validasi Input Kosong
             if (!newPassword || !confirmPassword) {
                 return process.render('dashboard.profile.updatePass', {
-                    title: 'Security Settings',
+                    title: 'Update Password',
                     errorMessage: 'New password fields are required.'
                 });
             }
@@ -127,7 +127,7 @@ class DashboardController extends BaseController {
             // 2. Validasi Kecocokan Password
             if (newPassword !== confirmPassword) {
                 return process.render('dashboard.profile.updatePass', {
-                    title: 'Security Settings',
+                    title: 'Update Password',
                     errorMessage: 'New password and confirmation do not match.'
                 });
             }
@@ -140,7 +140,7 @@ class DashboardController extends BaseController {
 
             if (error) {
                 return process.render('dashboard.profile.updatePass', {
-                    title: 'Security Settings',
+                    title: 'Update Password',
                     errorMessage: error.message
                 });
             }
@@ -148,14 +148,14 @@ class DashboardController extends BaseController {
             // 4. Jika berhasil, render kembali ke password dengan pesan sukses
             // Atau bisa ke dashboard sesuai keinginanmu
             return process.render('dashboard.profile.updatePass', {
-                title: 'Security Settings',
+                title: 'Update Password',
                 description: 'Your password has been updated successfully.'
             });
 
         } catch (err) {
             console.error('[Kuppa Error]', err.message);
             return process.render('dashboard.profile.updatePass', {
-                title: 'Security Settings',
+                title: 'Update Password',
                 errorMessage: 'An unexpected error occurred.'
             });
         }

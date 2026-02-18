@@ -3,11 +3,14 @@
 
 <div class="max-w-7xl mx-auto w-full px-4 py-24">
     {{!-- Dashboard Header --}}
-    <header class="mb-10">
-        <h1 class="text-3xl font-bold text-black mb-2 tracking-tighter">
-            {{title}}
-        </h1>
-        <p class="text-neutral-500 text-sm">{{description}}</p>
+
+    <header class="mb-16 flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold text-black mb-2 tracking-tighter">
+                {{title}}
+            </h1>
+            <p class="text-neutral-500 text-sm">{{description}}</p>
+        </div>
     </header>
 
     {{> submenu}}
@@ -57,13 +60,6 @@
                         <p class="text-[10px] text-neutral-400 font-bold uppercase tracking-widest mb-2">Account ID</p>
                         <p class="text-[11px] font-mono text-neutral-500 bg-neutral-50 px-3 py-2 rounded-lg border border-neutral-100 inline-block w-full truncate">
                             {{ userData.id }}
-                        </p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-neutral-400 font-bold uppercase tracking-widest mb-2">Account Status</p>
-                        <p class="text-xs font-bold text-neutral-800 flex items-center">
-                            <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                            Verified & Secure
                         </p>
                     </div>
                 </div>
