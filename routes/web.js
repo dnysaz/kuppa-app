@@ -1,7 +1,5 @@
 const kuppa = require('./config');
 const route = kuppa.router;
-
-// Aliasing for cleaner code
 const web = kuppa.controllers.web;
 const mw = kuppa.middleware;
 
@@ -20,6 +18,10 @@ route.group([mw.db, mw.guest], (route) => {
     
     route.post('/login', web.auth.login).name('login.post');
     route.post('/register', web.auth.register).name('register.post');
+
+    // Social Auth
+    route.get('/auth/google', web.SocialAuth.google).name('google.login');
+    route.get('/auth/callback', web.SocialAuth.callback).name('google.login.callback');
 });
 
 // --- Dashboard & Protected Group (Requires Authentication) ---

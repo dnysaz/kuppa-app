@@ -11,6 +11,7 @@ const kuppa = {
         web: {
             home: require('../app/Controllers/HomeController'),
             auth: require('../app/Controllers/AuthController'),
+            SocialAuth: require('../app/Controllers/SocialAuthController'),
             dashboard: require('../app/Controllers/DashboardController'),
             // add others here  
         },
