@@ -4,8 +4,11 @@
 <div class="min-h-[80vh] flex items-center justify-center px-4 py-12">
     <div class="max-w-md w-full bg-white border border-gray-200  rounded-3xl p-10">
         <header class="text-center mb-10">
+            <a href="{{route 'home'}}" class="inline-block mb-6">
+                <img src="{{asset 'logo/1.1.png'}}" alt="Kuppa.js Logo" class="h-10 w-auto mx-auto">
+            </a>
             <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight mb-2">
-                Create Account
+                {{ title }}
             </h1>
             <p class="text-gray-500">
                 {{#if errorMessage}}

@@ -4,7 +4,7 @@
             {{!-- Left Side --}}
             <div class="flex items-center gap-8">
                 <a href="{{route 'home'}}" class="group flex items-center gap-2">
-                    <span class="text-xl font-bold tracking-tighter text-black">Kuppa<span class="text-neutral-300 group-hover:text-black transition-colors">.js</span></span>
+                    <img src="{{asset 'logo/1.1.png'}}" alt="Kuppa.js Logo" class="h-8 w-auto">
                 </a>
                 
                 <div class="hidden md:flex gap-6 text-[14px] font-medium text-neutral-700">
@@ -27,11 +27,14 @@
                             {{#if globalUser.avatar}}
                                 <img src="/uploads/{{globalUser.avatar}}" alt="Avatar" class="w-full h-full object-cover">
                             {{else}}
-                                {{#if globalUser.name}}
-                                    {{slice globalUser.name 0 1}}
-                                {{else}}
-                                    {{slice globalUser.email 0 1}}
-                                {{/if}}
+                                {{!-- Menggunakan inisial huruf kecil jika avatar kosong --}}
+                                <span class="lowercase">
+                                    {{#if globalUser.name}}
+                                        {{slice globalUser.name 0 1}}
+                                    {{else}}
+                                        {{slice globalUser.email 0 1}}
+                                    {{/if}}
+                                </span>
                             {{/if}}
                         </div>
 
@@ -70,15 +73,18 @@
                 <div class="pt-4 border-t border-neutral-100">
                     <div class="flex items-center gap-3 mb-4">
                         {{!-- Mobile Avatar --}}
-                        <div class="w-10 h-10 rounded-full bg-black flex items-center justify-center text-white font-bold text-xs overflow-hidden border border-neutral-200">
+                        <div class="w-10 h-10 rounded-full bg-black flex items-center justify-center text-white font-bold text-xs overflow-hidden border border-neutral-200 shadow-sm">
                             {{#if globalUser.avatar}}
                                 <img src="/uploads/{{globalUser.avatar}}" alt="Avatar" class="w-full h-full object-cover">
                             {{else}}
-                                {{#if globalUser.name}}
-                                    {{slice globalUser.name 0 1}}
-                                {{else}}
-                                    {{slice globalUser.email 0 1}}
-                                {{/if}}
+                                {{!-- Menggunakan inisial huruf kecil --}}
+                                <span class="lowercase">
+                                    {{#if globalUser.name}}
+                                        {{slice globalUser.name 0 1}}
+                                    {{else}}
+                                        {{slice globalUser.email 0 1}}
+                                    {{/if}}
+                                </span>
                             {{/if}}
                         </div>
                         <div>

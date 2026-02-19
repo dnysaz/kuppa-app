@@ -4,7 +4,9 @@
             
             {{!-- Left: Brand & Beta Tag --}}
             <div class="flex items-center gap-3">
-                <span class="font-bold tracking-tighter text-black">Kuppa<span class="text-neutral-300">.js</span></span>
+                <a href="{{route 'home'}}" class="group flex items-center gap-2">
+                    <img src="{{asset 'logo/1.1.png'}}" alt="Kuppa.js Logo" class="h-8 w-auto">
+                </a>
                 <span class="text-[10px] font-mono text-neutral-700 border border-neutral-200 px-1.5 py-0.5 rounded uppercase tracking-widest">
                     {{ appVersion }}
                 </span>
