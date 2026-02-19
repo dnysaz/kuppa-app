@@ -27,7 +27,8 @@
                         <div class="relative group cursor-pointer" onclick="document.getElementById('avatarInput').click()">
                             <div class="w-24 h-24 rounded-full bg-black flex items-center justify-center text-white text-2xl font-bold border-2 border-neutral-100 shadow-xl overflow-hidden relative">
                                 {{#if userData.avatar}}
-                                    <img id="avatarPreview" src="/uploads/{{userData.avatar}}" class="w-full h-full object-cover">
+                                    {{!-- HAPUS "/uploads/" di bawah ini karena data sudah diproses di Controller --}}
+                                    <img id="avatarPreview" src="{{userData.avatar}}" class="w-full h-full object-cover">
                                 {{else}}
                                     <div id="avatarPlaceholder" class="w-full h-full flex items-center justify-center bg-black">
                                         {{#if userData.fullName}}{{slice userData.fullName 0 1}}{{else}}{{slice userData.email 0 1}}{{/if}}

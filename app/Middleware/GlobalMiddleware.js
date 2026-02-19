@@ -2,7 +2,7 @@ const { supabase } = require('../../core/config/Database');
 
 /**
  * GlobalMiddleware - Kuppa Framework
- * Menjaga data user tetap sinkron antara Session dan Database
+ * Mendeteksi apakah avatar_url adalah link (Google) atau file (Upload)
  */
 module.exports = async (req, res, next) => {
     const token = req.cookies.Kuppa_session;
@@ -11,34 +11,35 @@ module.exports = async (req, res, next) => {
 
     if (token) {
         try {
-            // 1. Decode Payload JWT
             const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
             const userId = payload.sub || payload.id;
             
-            // 2. Sync dengan Database
             const { data: dbUser } = await supabase
                 .from('users')
                 .select('*')
                 .eq('id', userId)
                 .single();
 
-            // 3. Merge Data: Prioritaskan data Database (untuk mendapatkan avatar_url terbaru)
-            const mergedUser = dbUser ? { ...payload, ...dbUser } : payload;
-            
-            // Simpan ke locals untuk View Engine
-            res.locals.user = mergedUser;
-            res.locals.globalUser = { 
-                name: mergedUser.full_name || mergedUser.user_metadata?.full_name || 'User', 
-                email: mergedUser.email,
-                // MAPPING PENTING: Agar Navbar bisa akses {{globalUser.avatar}}
-                avatar: mergedUser.avatar_url 
-            };
-            
-            // Simpan ke req agar bisa diakses Controller sebagai process.user
-            req.user = mergedUser;
+            if (dbUser) {
+                let avatarUrl = dbUser.avatar_url;
 
+                if (avatarUrl) {
+                    if (!avatarUrl.startsWith('http')) {
+                        avatarUrl = avatarUrl.startsWith('/uploads/') ? avatarUrl : `/uploads/${avatarUrl}`;
+                    }
+                }
+
+                // 3. Set data untuk View Engine
+                res.locals.user = dbUser;
+                res.locals.globalUser = { 
+                    name: dbUser.full_name || 'User', 
+                    email: dbUser.email,
+                    avatar: avatarUrl
+                };
+                
+                req.user = dbUser;
+            }
         } catch (err) {
-            // Jika token corrupt
             console.error('[Kuppa Middleware Error]:', err.message);
         }
     }

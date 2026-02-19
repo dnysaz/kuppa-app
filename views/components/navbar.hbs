@@ -25,9 +25,9 @@
                         {{!-- Desktop Avatar --}}
                         <div class="relative w-8 h-8 rounded-full bg-black flex items-center justify-center text-white font-bold text-[12px] border border-neutral-200 shadow-sm overflow-hidden">
                             {{#if globalUser.avatar}}
-                                <img src="/uploads/{{globalUser.avatar}}" alt="Avatar" class="w-full h-full object-cover">
+                                <img src="{{globalUser.avatar}}" alt="Avatar" class="w-full h-full object-cover">
                             {{else}}
-                                {{!-- Menggunakan inisial huruf kecil jika avatar kosong --}}
+                                {{!-- Menggunakan inisial jika avatar kosong --}}
                                 <span class="lowercase">
                                     {{#if globalUser.name}}
                                         {{slice globalUser.name 0 1}}
@@ -75,9 +75,8 @@
                         {{!-- Mobile Avatar --}}
                         <div class="w-10 h-10 rounded-full bg-black flex items-center justify-center text-white font-bold text-xs overflow-hidden border border-neutral-200 shadow-sm">
                             {{#if globalUser.avatar}}
-                                <img src="/uploads/{{globalUser.avatar}}" alt="Avatar" class="w-full h-full object-cover">
+                                <img src="{{globalUser.avatar}}" alt="Avatar" class="w-full h-full object-cover">
                             {{else}}
-                                {{!-- Menggunakan inisial huruf kecil --}}
                                 <span class="lowercase">
                                     {{#if globalUser.name}}
                                         {{slice globalUser.name 0 1}}

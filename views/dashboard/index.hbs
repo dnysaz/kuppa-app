@@ -36,13 +36,15 @@
                     {{!-- Avatar --}}
                     <div class="w-20 h-20 rounded-full bg-black flex items-center justify-center text-white text-2xl font-bold border border-neutral-100 shadow-xl shadow-black/5 overflow-hidden">
                         {{#if userData.avatar}}
-                            <img src="/uploads/{{userData.avatar}}" alt="{{userData.fullName}}" class="w-full h-full object-cover">
+                            <img src="{{userData.avatar}}" alt="{{userData.fullName}}" class="w-full h-full object-cover">
                         {{else}}
-                            {{#if userData.fullName}}
-                                {{slice userData.fullName 0 1}}
-                            {{else}}
-                                {{slice userData.email 0 1}}
-                            {{/if}}
+                            <span class="lowercase">
+                                {{#if userData.fullName}}
+                                    {{slice userData.fullName 0 1}}
+                                {{else}}
+                                    {{slice userData.email 0 1}}
+                                {{/if}}
+                            </span>
                         {{/if}}
                     </div>
                     

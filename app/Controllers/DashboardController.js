@@ -9,12 +9,13 @@ const { supabase } = require('../../core/config/Database');
  */
 class DashboardController extends BaseController {
 
-    /**
+/**
      * [GET] Dashboard Page
      */
     static async index(process) {
         try {
             const user = process.user;
+            const globalData = process.res.locals.globalUser;
 
             process.render('dashboard.index', { 
                 title: 'Dashboard', 
@@ -23,14 +24,13 @@ class DashboardController extends BaseController {
                     id: user?.id || user?.sub,
                     email: user?.email,
                     fullName: user?.full_name || 'User',
-                    avatar: user?.avatar_url,
+                    avatar: globalData?.avatar || user?.avatar_url, 
                     joinedAt: user?.created_at
                 }
             });
         } catch (err) {
             console.error('[Kuppa Error]', err.message);
         }
-        process.error;
     }
 
     /**
@@ -39,6 +39,8 @@ class DashboardController extends BaseController {
     static async edit(process) {
         try {
             const user = process.user;
+            // Ambil data yang sudah dirapikan Middleware
+            const globalData = process.res.locals.globalUser;
 
             process.render('dashboard.profile.editProfile', { 
                 title: 'Edit Profile',
@@ -47,13 +49,12 @@ class DashboardController extends BaseController {
                     id: user?.id || user?.sub,
                     email: user?.email,
                     fullName: user?.full_name || '',
-                    avatar: user?.avatar_url
+                    avatar: globalData?.avatar || user?.avatar_url
                 }
             });
         } catch (err) {
             console.error('[Kuppa Error]', err.message);
         }
-        process.error;
     }
 
     /**
@@ -65,35 +66,33 @@ class DashboardController extends BaseController {
             const userId = process.user?.id || process.user?.sub;
             if (!userId) return process.redirect('login');
 
-            // 1. Handle Upload via BaseController Helper
-            // Multer akan memproses stream data di sini
             const avatarPath = await controller.upload(process, { 
                 folder: 'avatars', 
                 field: 'avatar' 
             });
 
-            // 2. Ambil data fullName dari req.body (BUKAN process.body)
-            // Karena Multer mengisi objek request asli
             const { fullName } = process.req.body;
 
-            const updateData = {
-                full_name: fullName
-            };
+            const updateData = {};
+            
+            if (fullName) {
+                updateData.full_name = fullName;
+            }
 
-            // 3. Jika upload berhasil, masukkan path ke updateData
             if (avatarPath) {
                 updateData.avatar_url = avatarPath;
             }
 
-            // 4. Update Database
-            await User.update(userId, updateData);
+            if (Object.keys(updateData).length > 0) {
+                await User.update(userId, updateData);
+            }
 
-            process.redirect('dashboard');
+            return process.redirect('dashboard');
+
         } catch (err) {
             console.error('[Kuppa Error] Profile Update Failed:', err.message);
-            process.redirect('profile.editProfile');
+            return process.redirect('dashboard/edit-profile'); 
         }
-        process.error;
     }
 
     /**
@@ -116,7 +115,6 @@ class DashboardController extends BaseController {
         const { newPassword, confirmPassword } = process.body;
 
         try {
-            // 1. Validasi Input Kosong
             if (!newPassword || !confirmPassword) {
                 return process.render('dashboard.profile.updatePass', {
                     title: 'Update Password',
@@ -124,7 +122,6 @@ class DashboardController extends BaseController {
                 });
             }
 
-            // 2. Validasi Kecocokan Password
             if (newPassword !== confirmPassword) {
                 return process.render('dashboard.profile.updatePass', {
                     title: 'Update Password',
@@ -132,8 +129,6 @@ class DashboardController extends BaseController {
                 });
             }
 
-            // 3. Update Password via Supabase Auth SDK
-            // Supabase otomatis akan menghandle hashing dan update di auth.users
             const { error } = await supabase.auth.updateUser({
                 password: newPassword
             });
@@ -145,8 +140,6 @@ class DashboardController extends BaseController {
                 });
             }
 
-            // 4. Jika berhasil, render kembali ke password dengan pesan sukses
-            // Atau bisa ke dashboard sesuai keinginanmu
             return process.render('dashboard.profile.updatePass', {
                 title: 'Update Password',
                 description: 'Your password has been updated successfully.'
