@@ -3,25 +3,24 @@
  * Standardized for The minimalist javascript supabase framework
  */
 
-const BaseController = require('../../core/controller/BaseController');
+const BaseController = coreFile('controller.BaseController');
 
 class HomeController extends BaseController {
     
     /**
      * [GET] Index Page
-     * Landing page for the application
+     * Landing page for the application using Fluent Interface
      */
     static async index(process) {
         try {
-            process.render('welcome', { 
-                title: 'Hello Kuppa!',
-                message: 'The minimalist javascript supabase framework' 
-            });
+            const title = 'Hello Kuppa!';
+            const message = 'The minimalist javascript supabase framework';
+
+            return process.res.render('welcome').with({ title, message });
+
         } catch (err) {
-            console.error('[Kuppa Error]', err.message);
+            process.next(err);
         }
-        
-        process.error;
     }
 }
 

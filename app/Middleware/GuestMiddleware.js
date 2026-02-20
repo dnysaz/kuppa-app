@@ -7,7 +7,6 @@ module.exports = (req, res, next) => {
     if (user) {
         const dashboardPath = global.KuppaRoutes ? global.KuppaRoutes['dashboard'] : '/dashboard';
         
-        // Cari path login dan register secara dinamis
         const loginPath = global.KuppaRoutes ? global.KuppaRoutes['login'] : '/login';
         const registerPath = global.KuppaRoutes ? global.KuppaRoutes['register'] : '/register';
 

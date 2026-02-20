@@ -1,35 +1,43 @@
-const User = require('../Models/User');
-const BaseController = require('../../core/controller/BaseController');
-const { supabase } = require('../../core/config/Database');
-
-
 /**
  * DashboardController - Kuppa Framework
- * Optimized for The minimalist javascript supabase framework with BaseController Inheritance
+ * Standardized for The minimalist javascript supabase framework
+ * Updated by Ketut Dana
  */
+
+// Core System Dependencies
+const BaseController = coreFile('controller.BaseController');
+const { supabase }   = coreFile('config.Database');
+
+// Application Dependencies
+const User           = appFile('Models.User');
+
 class DashboardController extends BaseController {
 
-/**
+    /**
      * [GET] Dashboard Page
      */
     static async index(process) {
         try {
             const user = process.user;
             const globalData = process.res.locals.globalUser;
+            const title = 'Dashboard';
+            const description = 'Overview of your application and system status.';
+            
+            const userData = {
+                id: user?.id || user?.sub,
+                email: user?.email,
+                fullName: user?.full_name || 'User',
+                avatar: globalData?.avatar || user?.avatar_url, 
+                joinedAt: user?.created_at
+            };
 
-            process.render('dashboard.index', { 
-                title: 'Dashboard', 
-                description: 'Overview of your application and system status.',
-                userData: {
-                    id: user?.id || user?.sub,
-                    email: user?.email,
-                    fullName: user?.full_name || 'User',
-                    avatar: globalData?.avatar || user?.avatar_url, 
-                    joinedAt: user?.created_at
-                }
+            return process.res.render('dashboard.index').with({ 
+                title, 
+                description,
+                userData
             });
         } catch (err) {
-            console.error('[Kuppa Error]', err.message);
+            process.next(err);
         }
     }
 
@@ -39,21 +47,24 @@ class DashboardController extends BaseController {
     static async edit(process) {
         try {
             const user = process.user;
-            // Ambil data yang sudah dirapikan Middleware
             const globalData = process.res.locals.globalUser;
+            const title = 'Edit Profile';
+            const description = 'Update your personal information.';
 
-            process.render('dashboard.profile.editProfile', { 
-                title: 'Edit Profile',
-                description: 'Update your personal information.',
-                userData: {
-                    id: user?.id || user?.sub,
-                    email: user?.email,
-                    fullName: user?.full_name || '',
-                    avatar: globalData?.avatar || user?.avatar_url
-                }
+            const userData = {
+                id: user?.id || user?.sub,
+                email: user?.email,
+                fullName: user?.full_name || '',
+                avatar: globalData?.avatar || user?.avatar_url
+            };
+
+            return process.res.render('dashboard.profile.editProfile').with({ 
+                title,
+                description,
+                userData
             });
         } catch (err) {
-            console.error('[Kuppa Error]', err.message);
+            process.next(err);
         }
     }
 
@@ -64,7 +75,7 @@ class DashboardController extends BaseController {
         const controller = new DashboardController();
         try {
             const userId = process.user?.id || process.user?.sub;
-            if (!userId) return process.redirect('login');
+            if (!userId) return process.res.redirect('/login');
 
             const avatarPath = await controller.upload(process, { 
                 folder: 'avatars', 
@@ -72,26 +83,19 @@ class DashboardController extends BaseController {
             });
 
             const { fullName } = process.req.body;
-
             const updateData = {};
             
-            if (fullName) {
-                updateData.full_name = fullName;
-            }
-
-            if (avatarPath) {
-                updateData.avatar_url = avatarPath;
-            }
+            if (fullName) updateData.full_name = fullName;
+            if (avatarPath) updateData.avatar_url = avatarPath;
 
             if (Object.keys(updateData).length > 0) {
                 await User.update(userId, updateData);
             }
 
-            return process.redirect('dashboard');
+            return process.res.redirect('/dashboard');
 
         } catch (err) {
-            console.error('[Kuppa Error] Profile Update Failed:', err.message);
-            return process.redirect('dashboard/edit-profile'); 
+            process.next(err);
         }
     }
 
@@ -99,60 +103,65 @@ class DashboardController extends BaseController {
      * [GET] Password Update Page
      */
     static async password(process) {
-        process.render('dashboard.profile.updatePass', {
-            title: 'Update Password',
-            description: 'Update your password!'
-
-        });
-        process.error;
+        try {
+            return process.res.render('dashboard.profile.updatePass').with({
+                title: 'Update Password',
+                description: 'Update your password!'
+            });
+        } catch (err) {
+            process.next(err);
+        }
     }
 
     /**
      * [POST] Update Password Action
-     * Menggunakan SDK Supabase untuk mengupdate password di auth.users
      */
     static async updatePassword(process) {
-        const { newPassword, confirmPassword } = process.body;
-
         try {
+            const { currentPassword, newPassword, confirmPassword } = process.body;
+            const title = 'Update Password';
+            const view = 'dashboard.profile.updatePass';
+
+            // 1. Validation for Empty Inputs
             if (!newPassword || !confirmPassword) {
-                return process.render('dashboard.profile.updatePass', {
-                    title: 'Update Password',
+                return process.res.render(view).with({
+                    title,
                     errorMessage: 'New password fields are required.'
                 });
             }
 
+            // 2. Validation for Match
             if (newPassword !== confirmPassword) {
-                return process.render('dashboard.profile.updatePass', {
-                    title: 'Update Password',
+                return process.res.render(view).with({
+                    title,
                     errorMessage: 'New password and confirmation do not match.'
                 });
             }
 
+            // 3. Update via Supabase SDK
             const { error } = await supabase.auth.updateUser({
                 password: newPassword
             });
 
             if (error) {
-                return process.render('dashboard.profile.updatePass', {
-                    title: 'Update Password',
-                    errorMessage: error.message
+                const msg = error.message === 'Auth session missing!' 
+                            ? 'Your session has expired. Please log in again.' 
+                            : error.message;
+
+                return process.res.render(view).with({
+                    title,
+                    errorMessage: msg
                 });
             }
 
-            return process.render('dashboard.profile.updatePass', {
-                title: 'Update Password',
-                description: 'Your password has been updated successfully.'
+            return process.res.render(view).with({
+                title,
+                successMessage: 'Your password has been updated successfully.'
             });
 
         } catch (err) {
-            console.error('[Kuppa Error]', err.message);
-            return process.render('dashboard.profile.updatePass', {
-                title: 'Update Password',
-                errorMessage: 'An unexpected error occurred.'
-            });
+            process.next(err);
         }
-        process.error;
     }
 }
 

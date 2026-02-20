@@ -1,10 +1,12 @@
-const { supabase } = require('../../core/config/Database');
-const BaseController = require('../../core/controller/BaseController');
-
 /**
  * SocialAuthController - Kuppa Framework
  * Standardized Social Authentication Logic (OAuth)
  */
+
+// Core System Dependencies
+const BaseController = coreFile('controller.BaseController');
+const { supabase }   = coreFile('config.Database');
+
 class SocialAuthController extends BaseController {
 
     /**
@@ -12,7 +14,7 @@ class SocialAuthController extends BaseController {
      */
     static async google(process) {
         try {
-            // Mengambil SITE_URL dari global process untuk menghindari shadowing
+            // Accessing APP_URL via global.process to avoid shadowing with the 'process' parameter
             const siteUrl = global.process.env.APP_URL;
 
             const { data, error } = await supabase.auth.signInWithOAuth({
@@ -28,16 +30,15 @@ class SocialAuthController extends BaseController {
 
             if (error) {
                 console.error('[Kuppa Social Error]', error.message);
-                return process.redirect('login?error=' + encodeURIComponent(error.message));
+                return process.res.redirect('/login?error=' + encodeURIComponent(error.message));
             }
 
-            // Redirect user ke URL Google
-            process.redirect(data.url);
+            return process.res.redirect(data.url);
 
         } catch (err) {
-            console.error('[Kuppa Error]', err.message);
+            process.next(err);
+            return process.res.redirect('/login');
         }
-        process.error;
     }
 
     /**
@@ -45,13 +46,13 @@ class SocialAuthController extends BaseController {
      */
     static async callback(process) {
         try {
-            // Kita tidak langsung redirect, tapi render view bridge
-            return process.render('auth.callback', { 
-                layout: false // Tidak butuh header/footer
+            // Render view bridge without layout using Fluent Interface
+            return process.res.render('auth.callback').with({ 
+                layout: false 
             });
         } catch (err) {
-            console.error('[Kuppa Error]', err.message);
-            process.redirect('login');
+            process.next(err);
+            return process.res.redirect('/login');
         }
     }
 }
