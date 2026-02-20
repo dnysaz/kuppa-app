@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-require('./core/Autoload');
 
 const fs = require('fs');
 const path = require('path');
@@ -7,8 +6,8 @@ const { execSync } = require('child_process');
 
 const args = process.argv.slice(2);
 const command = args[0];
-// Mengarah ke core/cli/kuppa.js sesuai koreksi kamu
 const coreCliPath = path.join(process.cwd(), 'core/cli/Kuppa.js');
+const autoloadPath = path.join(process.cwd(), 'core/Autoload.js');
 
 /**
  * Helper: Ambil REPO dari .env jika ada
@@ -19,7 +18,9 @@ const getEnv = (key, fallback) => {
         const envContent = fs.readFileSync(envPath, 'utf8');
         const lines = envContent.split('\n');
         for (const line of lines) {
-            const [k, v] = line.split('=');
+            const parts = line.split('=');
+            const k = parts[0];
+            const v = parts.slice(1).join('=');
             if (k && k.trim() === key) return v.trim();
         }
     }
@@ -63,7 +64,7 @@ const syncCore = (isUpdate = false) => {
             console.log('Kuppa: Created .env from .env.example.');
         }
     } catch (error) {
-        console.error(`Kuppa: Failed to synchronize core engine! .`);
+        console.error(`Kuppa: Failed to synchronize core engine!`);
         if (fs.existsSync(tempPath)) fs.rmSync(tempPath, { recursive: true, force: true });
     }
 };
@@ -74,11 +75,13 @@ if (command === 'run:install') {
 } else if (command === 'run:update') {
     syncCore(true);
 } else {
-    if (fs.existsSync(coreCliPath)) {
-        // Memanggil engine utama di core/cli/kuppa.js
-        require(coreCliPath);
+    // Jalankan Autoload & CLI Engine HANYA jika file sudah ada
+    if (fs.existsSync(autoloadPath) && fs.existsSync(coreCliPath)) {
+        require('./core/Autoload'); // Load Autoload globals
+        require(coreCliPath);       // Jalankan CLI engine
     } else {
         console.log('\x1b[31m[Kuppa Error]:\x1b[0m Core engine not found.');
         console.log('Run: \x1b[1mkuppa run:install\x1b[0m to download the core.');
+        process.exit(1);
     }
 }
