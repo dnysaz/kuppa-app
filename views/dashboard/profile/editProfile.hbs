@@ -1,18 +1,9 @@
-{{set "title" "Edit Profile"}}
-{{set "description" "Update your personal information and account settings."}}
+{{set "title" title}}
+{{set "description" description}}
 
-<div class="max-w-7xl mx-auto w-full px-4 py-24">
-    <header class="mb-16 flex items-center justify-between">
-        <div>
-            <h1 class="text-3xl font-bold text-black mb-2 tracking-tighter">
-                {{title}}
-            </h1>
-            <p class="text-neutral-500 text-sm">{{description}}</p>
-        </div>
-        <a href="{{route 'dashboard'}}" class="text-xs font-bold text-neutral-400 hover:text-black">
-            Back to Dashboard
-        </a>
-    </header>
+<section>
+
+    {{> brandHeader}}
 
     {{> submenu}}
 
@@ -76,25 +67,26 @@
             </form>
         </div>
     </div>
-</div>
 
-<script>
-    function previewImage(input) {
-        const preview = document.getElementById('avatarPreview');
-        const placeholder = document.getElementById('avatarPlaceholder');
-        
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                if (preview) {
-                    preview.src = e.target.result;
-                    preview.classList.remove('hidden');
+    <script>
+        function previewImage(input) {
+            const preview = document.getElementById('avatarPreview');
+            const placeholder = document.getElementById('avatarPlaceholder');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (preview) {
+                        preview.src = e.target.result;
+                        preview.classList.remove('hidden');
+                    }
+                    if (placeholder) {
+                        placeholder.classList.add('hidden');
+                    }
                 }
-                if (placeholder) {
-                    placeholder.classList.add('hidden');
-                }
+                reader.readAsDataURL(input.files[0]);
             }
-            reader.readAsDataURL(input.files[0]);
         }
-    }
-</script>
+    </script>
+
+</section>

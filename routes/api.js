@@ -1,7 +1,11 @@
+/**
+ * Kuppa API Routes Configuration
+ */
+
 const kuppa = require('./config');
 const route = kuppa.router;
-const api = kuppa.controllers.api;
-const mw = kuppa.middleware;
+const api   = kuppa.controllers.api;
+const mw    = kuppa.middleware;
 
 /**
  * Kuppa API Routes

@@ -1,12 +1,13 @@
 /**
  * DashboardController - Kuppa Framework
  * Standardized for The minimalist javascript supabase framework
- * Updated by Ketut Dana
+ * Refactored with Validation & Model Sync by Ketut Dana
  */
 
 // Core System Dependencies
 const BaseController = coreFile('controller.BaseController');
 const { supabase }   = coreFile('config.Database');
+const Validation     = coreFile('utils.Validation');
 
 // Application Dependencies
 const User           = appFile('Models.User');
@@ -18,10 +19,10 @@ class DashboardController extends BaseController {
      */
     static async index(process) {
         try {
-            const user = process.user;
-            const globalData = process.res.locals.globalUser;
-            const title = 'Dashboard';
-            const description = 'Overview of your application and system status.';
+            const user          = process.user;
+            const globalData    = process.res.locals.globalUser;
+            const title         = 'Dashboard';
+            const description   = 'Overview of your application and system status.';
             
             const userData = {
                 id: user?.id || user?.sub,
@@ -31,7 +32,7 @@ class DashboardController extends BaseController {
                 joinedAt: user?.created_at
             };
 
-            return process.res.render('dashboard.index').with({ 
+            return process.view('dashboard.index').with({ 
                 title, 
                 description,
                 userData
@@ -46,10 +47,10 @@ class DashboardController extends BaseController {
      */
     static async edit(process) {
         try {
-            const user = process.user;
-            const globalData = process.res.locals.globalUser;
-            const title = 'Edit Profile';
-            const description = 'Update your personal information.';
+            const user          = process.user;
+            const globalData    = process.res.locals.globalUser;
+            const title         = 'Edit Profile';
+            const description   = 'Update your personal information.';
 
             const userData = {
                 id: user?.id || user?.sub,
@@ -58,7 +59,7 @@ class DashboardController extends BaseController {
                 avatar: globalData?.avatar || user?.avatar_url
             };
 
-            return process.res.render('dashboard.profile.editProfile').with({ 
+            return process.view('dashboard.profile.editProfile').with({ 
                 title,
                 description,
                 userData
@@ -73,21 +74,47 @@ class DashboardController extends BaseController {
      */
     static async update(process) {
         const controller = new DashboardController();
+
         try {
             const userId = process.user?.id || process.user?.sub;
+            const title  = 'Edit Profile';
+            const view   = 'dashboard.profile.editProfile';
+
             if (!userId) return process.res.redirect('/login');
 
+            // 1. Handle Upload
             const avatarPath = await controller.upload(process, { 
                 folder: 'avatars', 
                 field: 'avatar' 
             });
 
-            const { fullName } = process.req.body;
+            // 2. Safe Body Access (Important for multipart)
+            const body = process.body || process.req.body || {};
+            const { fullName } = body;
+
+            // 3. Validation Logic
+            const validate = Validation.make(body, {
+                fullName: 'required|min:3'
+            });
+
+            if (validate.fails()) {
+                const user = process.user;
+                return process.view(view).with({
+                    title,
+                    errorMessage: validate.firstError(),
+                    userData: { 
+                        fullName: fullName, 
+                        avatar: user?.avatar_url 
+                    }
+                });
+            }
+
+            // 4. Prepare Update Payload
             const updateData = {};
-            
             if (fullName) updateData.full_name = fullName;
             if (avatarPath) updateData.avatar_url = avatarPath;
 
+            // 5. Update via Model
             if (Object.keys(updateData).length > 0) {
                 await User.update(userId, updateData);
             }
@@ -104,9 +131,12 @@ class DashboardController extends BaseController {
      */
     static async password(process) {
         try {
-            return process.res.render('dashboard.profile.updatePass').with({
-                title: 'Update Password',
-                description: 'Update your password!'
+            const title       = 'Update Password';
+            const description = 'Update your password!';
+
+            return process.view('dashboard.profile.updatePass').with({
+                title,
+                description
             });
         } catch (err) {
             process.next(err);
@@ -118,43 +148,36 @@ class DashboardController extends BaseController {
      */
     static async updatePassword(process) {
         try {
-            const { currentPassword, newPassword, confirmPassword } = process.body;
-            const title = 'Update Password';
-            const view = 'dashboard.profile.updatePass';
+            const title   = 'Update Password';
+            const view    = 'dashboard.profile.updatePass';
+            const expired = 'Your session has expired. Please log in again.';
 
-            // 1. Validation for Empty Inputs
-            if (!newPassword || !confirmPassword) {
-                return process.res.render(view).with({
+            // 1. Validation Logic (Laravel-style)
+            const validate = Validation.make(process.body, {
+                newPassword: 'required|min:6|confirmed'
+            });
+
+            if (validate.fails()) {
+                return process.view(view).with({
                     title,
-                    errorMessage: 'New password fields are required.'
+                    errorMessage: validate.firstError()
                 });
             }
 
-            // 2. Validation for Match
-            if (newPassword !== confirmPassword) {
-                return process.res.render(view).with({
-                    title,
-                    errorMessage: 'New password and confirmation do not match.'
-                });
-            }
-
-            // 3. Update via Supabase SDK
+            // 2. Update via Supabase SDK
             const { error } = await supabase.auth.updateUser({
-                password: newPassword
+                password: process.body.newPassword
             });
 
             if (error) {
-                const msg = error.message === 'Auth session missing!' 
-                            ? 'Your session has expired. Please log in again.' 
-                            : error.message;
-
-                return process.res.render(view).with({
+                const msg = error.message === 'Auth session missing!' ? expired : error.message;
+                return process.view(view).with({
                     title,
                     errorMessage: msg
                 });
             }
 
-            return process.res.render(view).with({
+            return process.view(view).with({
                 title,
                 successMessage: 'Your password has been updated successfully.'
             });

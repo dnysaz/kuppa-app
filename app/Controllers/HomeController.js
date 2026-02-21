@@ -13,12 +13,28 @@ class HomeController extends BaseController {
      */
     static async index(process) {
         try {
-            const title = 'Hello Kuppa!';
-            const message = 'The minimalist javascript supabase framework';
+            const title         = 'Hello Kuppa!';
+            const description   = 'The minimalist javascript supabase framework';
 
-            return process.res.render('welcome').with({ title, message });
+            return process.view('welcome').with({ title, description });
 
         } catch (err) {
+
+            process.next(err);
+        }
+    }
+
+    static async help(process) {
+
+        try {
+
+            const title         = 'Help Menu';
+            const description   = 'This is Help Menu!';
+
+            return process.view('help.index').with({title, description});
+
+        } catch (err) {
+
             process.next(err);
         }
     }

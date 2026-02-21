@@ -14,13 +14,16 @@ class SocialAuthController extends BaseController {
      */
     static async google(process) {
         try {
-            // Accessing APP_URL via global.process to avoid shadowing with the 'process' parameter
-            const siteUrl = global.process.env.APP_URL;
-
+            // Context & Configurations
+            const siteUrl           = global.process.env.APP_URL;
+            const redirectPath      = `${siteUrl}/auth/callback`;
+            const loginErrorPath    = '/login?error=';
+            
+            // Execute OAuth Sign-In
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: `${siteUrl}/auth/callback`,
+                    redirectTo: redirectPath,
                     queryParams: {
                         access_type: 'offline',
                         prompt: 'select_account',
@@ -29,8 +32,9 @@ class SocialAuthController extends BaseController {
             });
 
             if (error) {
+                const encodedError = encodeURIComponent(error.message);
                 console.error('[Kuppa Social Error]', error.message);
-                return process.res.redirect('/login?error=' + encodeURIComponent(error.message));
+                return process.res.redirect(loginErrorPath + encodedError);
             }
 
             return process.res.redirect(data.url);
@@ -46,9 +50,12 @@ class SocialAuthController extends BaseController {
      */
     static async callback(process) {
         try {
+            // Layout context
+            const useLayout = false;
+
             // Render view bridge without layout using Fluent Interface
-            return process.res.render('auth.callback').with({ 
-                layout: false 
+            return process.view('auth.callback').with({ 
+                layout: useLayout 
             });
         } catch (err) {
             process.next(err);

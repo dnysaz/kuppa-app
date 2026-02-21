@@ -1,23 +1,12 @@
-{{set "title" "Dashboard"}}
-{{set "description" "Overview of your application and system status."}}
+{{set "title" title}}
+{{set "description" description}}
 
-<div class="max-w-7xl mx-auto w-full px-4 py-24">
-    {{!-- Dashboard Header --}}
-
-    <header class="mb-16 flex items-center justify-between">
-        <div>
-            <h1 class="text-3xl font-bold text-black mb-2 tracking-tighter">
-                {{title}}
-            </h1>
-            <p class="text-neutral-500 text-sm">{{description}}</p>
-        </div>
-    </header>
+<section>
+    {{> brandHeader}}
 
     {{> submenu}}
 
-
     <div class="gap-8">
-        {{!-- Profile Section --}}
         <div class="bg-white border border-neutral-200 rounded-xl p-6 shadow-sm">
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center space-x-3">
@@ -68,4 +57,4 @@
             </div>
         </div>
     </div>
-</div>
+</section>
