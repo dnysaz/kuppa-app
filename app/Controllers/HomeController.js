@@ -4,6 +4,9 @@
  */
 
 const BaseController = coreFile('controller.BaseController');
+// const { supabase }   = coreFile('config.Database');
+// const Validation     = coreFile('utils.Validation');
+// const YourModel      = appFile('Models.YourModel'); 
 
 class HomeController extends BaseController {
     
@@ -24,6 +27,9 @@ class HomeController extends BaseController {
         }
     }
 
+    /**
+     * [GET] Help Page
+     */
     static async help(process) {
 
         try {
@@ -38,6 +44,8 @@ class HomeController extends BaseController {
             process.next(err);
         }
     }
+
+    // Do more ...
 }
 
 module.exports = HomeController;

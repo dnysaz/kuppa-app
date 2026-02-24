@@ -9,9 +9,7 @@ const BaseController = coreFile('controller.BaseController');
 const { supabase }   = coreFile('config.Database');
 const Session        = coreFile('auth.Session');
 const Validation     = coreFile('utils.Validation');
-
-// Application Dependencies (Instance of User Model)
-const User           = appFile('Models.User');
+const Profile        = appFile('Models.Profile');
 
 class AuthController extends BaseController {
     
@@ -20,11 +18,15 @@ class AuthController extends BaseController {
      */
     static async loginPage(process) {
         try {
-            const layout  = 'layouts.guest';
-            const title   = 'Login';
-            const message = 'Please login to continue.';
+            const layout      = 'layouts.guest';
+            const title       = 'Login';
+            const description = 'Please login to continue.';
 
-            return process.view('auth.login').with({ layout, title, message });
+            return process.view('auth.login').with({ 
+                layout,
+                title, 
+                description 
+            });
         } catch (err) {
             process.next(err);
         }
@@ -35,11 +37,15 @@ class AuthController extends BaseController {
      */
     static async registerPage(process) {
         try {
-            const layout  = 'layouts.guest';
-            const title   = 'Register';
-            const message = 'Create a new account.';
+            const layout      = 'layouts.guest';
+            const title       = 'Register';
+            const description = 'Create a new account.';
 
-            return process.view('auth.register').with({ layout, title, message });
+            return process.view('auth.register').with({
+                layout,
+                title,
+                description 
+            });
         } catch (err) {
             process.next(err);
         }
@@ -49,8 +55,10 @@ class AuthController extends BaseController {
      * [POST] Process Registration
      */
     static async register(process) {
+        // Destructuring body for cleaner access
+        const { name, email, password } = process.body;
+        
         try {
-            const { name, email, password } = process.body;
             const layout = 'layouts.guest';
             const title  = 'Login';
             const message = 'Registration successful! You can now login.';
@@ -72,16 +80,21 @@ class AuthController extends BaseController {
                 });
             }
 
-            // 2. Delegate to User Model
-            await User.createAccount(name, email, password);
+            /**
+             * 2. Delegate to Profile Model
+             * This triggers Supabase Auth and our PG Trigger syncs to 'profiles' table.
+             */
+            await Profile.createAccount(name, email, password);
 
             return process.view('auth.login').with({ layout, title, message });
 
         } catch (err) {
+            // Serious mode: log error and return to view with message
+            console.error('[Registration Error]', err.message);
             return process.view('auth.register').with({ 
                 layout: 'layouts.guest', 
                 errorMessage: err.message, 
-                oldData: { name: process.body.name, email: process.body.email } 
+                oldData: { name, email } 
             });
         }
     }
@@ -90,8 +103,9 @@ class AuthController extends BaseController {
      * [POST] Process Login
      */
     static async login(process) {
+        const { email, password } = process.body;
+        
         try {
-            const { email, password } = process.body;
             const layout = 'layouts.guest';
 
             // 1. Validation Logic
@@ -108,19 +122,23 @@ class AuthController extends BaseController {
                 });
             }
 
-            // 2. Attempt Login via Model
-            const session = await User.attemptLogin(email, password);
+            /**
+             * 2. Attempt Login via Profile Model
+             * Accessing instance methods since Profile is exported as 'new Profile()'
+             */
+            const session = await Profile.attemptLogin(email, password);
 
-            // 3. Create Kuppa Session
+            // 3. Create Kuppa Session (Cookie persistence)
             Session.create(process.res, session.access_token);
 
             return process.res.redirect('/dashboard');
 
         } catch (err) {
+            console.error('[Login Error]', err.message);
             return process.view('auth.login').with({ 
                 layout: 'layouts.guest', 
                 errorMessage: err.message, 
-                oldEmail: process.body.email 
+                oldEmail: email 
             });
         }
     }
@@ -129,6 +147,7 @@ class AuthController extends BaseController {
      * [POST] Process Logout
      */
     static async logout(process) {
+        
         try {
             await supabase.auth.signOut(); 
             Session.destroy(process.res); 
@@ -144,10 +163,16 @@ class AuthController extends BaseController {
      */
     static async forgotPassword(process) {
         try {
-            const layout = 'layouts.guest';
-            const title  = 'Forgot Password';
-            
-            return process.view('auth.forgot-password').with({ layout, title });
+            const layout       = 'layouts.guest';
+            const title        = 'Forgot Password';
+            const description  = 'Enter your new password to regain access to your account.';
+
+            return process.view('auth.forgot-password').with({
+                layout, 
+                title,
+                description,
+            });
+
         } catch (err) {
             process.next(err);
         }
@@ -158,10 +183,10 @@ class AuthController extends BaseController {
      */
     static async sendResetLink(process) {
         try {
-            const layout  = 'layouts.guest';
-            const message = 'Password reset link has been sent to your email.';
+            const { email } = process.body;
+            const layout    = 'layouts.guest';
+            const message   = 'Password reset link has been sent to your email.';
             
-            // 1. Validation Logic
             const validate = Validation.make(process.body, { email: 'required|email' });
 
             if (validate.fails()) {
@@ -173,8 +198,7 @@ class AuthController extends BaseController {
 
             const resetRedirect = `${process.req.protocol}://${process.req.get('host')}/reset-password`;
 
-            // 2. Supabase Auth Call
-            const { error } = await supabase.auth.resetPasswordForEmail(process.body.email, {
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
                 redirectTo: resetRedirect,
             });
 
@@ -200,6 +224,7 @@ class AuthController extends BaseController {
             const { access_token } = process.req.query;
             const layout = 'layouts.guest';
             const title  = 'Reset Password';
+            const description  = 'Enter your new password to regain access to your account.';
             
             if (access_token) {
                 await supabase.auth.setSession({
@@ -209,7 +234,11 @@ class AuthController extends BaseController {
                 Session.create(process.res, access_token);
             }
 
-            return process.view('auth.reset-password').with({ layout, title });
+            return process.view('auth.reset-password').with({
+                layout,
+                title,
+                description
+            });
         } catch (err) {
             process.next(err);
         }
@@ -225,7 +254,6 @@ class AuthController extends BaseController {
             const message = 'Password has been updated. You can now login.';
             const expired = 'Session expired. Please request a new reset link.';
 
-            // 1. Validation Logic
             const validate = Validation.make(process.body, { 
                 password: 'required|min:6|confirmed' 
             });
@@ -237,7 +265,6 @@ class AuthController extends BaseController {
                 });
             }
 
-            // 2. Session Check
             const token = process.req.cookies.Kuppa_session;
             if (!token) {
                 return process.view('auth.reset-password').with({ 
@@ -246,7 +273,6 @@ class AuthController extends BaseController {
                 });
             }
 
-            // 3. Update via Supabase
             await supabase.auth.setSession({ access_token: token, refresh_token: '' });
             const { error } = await supabase.auth.updateUser({ password: process.body.password });
 

@@ -9,8 +9,11 @@ module.exports = (req, res, next) => {
         if (req.path === loginPath) return next();
         return res.redirect(loginPath);
     }
-    
+
+    // Titipkan di req (untuk diakses sebagai process.user)
     req.user = user; 
+    
+    // Pastikan res.locals juga tetap pegang data (untuk cadangan)
     res.locals.user = user;
 
     next();

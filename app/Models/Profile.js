@@ -1,21 +1,30 @@
-const BaseModel = coreFile('model/BaseModel');
-const { supabase } = coreFile('config.Database');
-
 /**
- * User Model - Kuppa Framework
- * Standardized for minimalist javascript supabase framework
- * Optimized by Ketut Dana
+ * Profile Model - Kuppa Framework
+ * Handles data logic for the 'profiles' table
+ * Standardized by Ketut Dana
  */
-class User extends BaseModel {
-    constructor() {
-        super('users');
 
+const BaseModel     = coreFile('model.BaseModel');
+const { supabase }  = coreFile('config.Database');
+
+class Profile extends BaseModel {
+    constructor() {
+        /**
+         * Pass the table name 'profiles' to the BaseModel
+         */
+        super('profiles');
+
+        /**
+         * Mass Assignment Protection
+         */
         this.fillable = [
-            'email', 
+            'email',
+            'user_name',
             'full_name', 
             'avatar_url', 
             'status', 
-            'last_login'
+            'last_login',
+            'bio'
         ];
     }
 
@@ -64,16 +73,10 @@ class User extends BaseModel {
 
     // --- QUERY LOGIC ---
 
-    /**
-     * Find user by email using BaseModel findBy
-     */
     async findByEmail(email) {
         return await this.findBy('email', email);
     }
 
-    /**
-     * Find active user by email using BaseModel findWhere
-     */
     async findActiveByEmail(email) {
         return await this.findWhere({ 
             email: email, 
@@ -82,4 +85,7 @@ class User extends BaseModel {
     }
 }
 
-module.exports = new User();
+/**
+ * Exporting instance to match Ketut's original architecture
+ */
+module.exports = new Profile();

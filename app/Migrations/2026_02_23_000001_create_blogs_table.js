@@ -13,12 +13,11 @@ class CreateBlogsTable extends Migration {
         return this.createTable('blogs', (table) => {
             table.id(); 
             table.string('title');
-            table.string('slug');
+            table.string('slug').unique();
             table.text('body');
             table.string('category').default('general');
             table.string('status').default('draft');
-            table.uuid('user_id').references('users', 'id');
-            table.timestamps();
+            table.uuid('profile_id').references('profiles', 'id').onDelete('CASCADE');            table.timestamps();
         });
     }
 

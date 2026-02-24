@@ -1,12 +1,61 @@
-{{!-- Sub-Menu / Tabs --}}
-<div class="flex items-center space-x-1 mb-8 border-b border-neutral-100">
-    <a href="{{route 'dashboard'}}" class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest border-b-2 {{#if (eq title 'Dashboard')}}border-black text-black{{else}}border-transparent text-neutral-400 hover:text-black{{/if}} transition-all">
-        Overview
-    </a>
-    <a href="{{route 'profile.edit'}}" class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest border-b-2 {{#if (eq title 'Edit Profile')}}border-black text-black{{else}}border-transparent text-neutral-400 hover:text-black{{/if}} transition-all">
-        Edit Profile
-    </a>
-    <a href="{{route 'profile.password'}}" class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest border-b-2 {{#if (eq title 'Update Password')}}border-black text-black{{else}}border-transparent text-neutral-400 hover:text-black{{/if}} transition-all">
-        Update Password
-    </a>
+{{!-- Profile Dropdown Menu --}}
+<div class="relative mb-8 inline-block text-left">
+    {{!-- Trigger Button --}}
+    <button id="profile-dropdown-btn" class="flex items-center gap-3 px-5 py-3 bg-gray-50 border border-neutral-100 rounded-xl text-[12px] font-black text-black hover:bg-neutral-100 transition-all active:scale-95">
+        <span>Menu: {{ title }}</span>
+        <svg class="w-3 h-3 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+        </svg>
+    </button>
+
+    {{!-- Dropdown Content --}}
+    <div id="profile-dropdown-content" class="absolute left-0 mt-2 w-56 origin-top-left bg-white border border-neutral-100 rounded-2xl shadow-xl shadow-black/5 z-[40] hidden opacity-0 transition-all duration-200 transform scale-95">
+        <div class="p-2 flex flex-col gap-1">
+            <a href="{{route 'dashboard'}}" class="px-4 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all {{#if (eq title 'Dashboard')}}bg-black text-white{{else}}text-neutral-400 hover:bg-gray-50 hover:text-black{{/if}}">
+                Overview
+            </a>
+            <a href="{{route 'profile.edit'}}" class="px-4 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all {{#if (eq title 'Edit Profile')}}bg-black text-white{{else}}text-neutral-400 hover:bg-gray-50 hover:text-black{{/if}}">
+                Edit Profile
+            </a>
+            <a href="{{route 'profile.password'}}" class="px-4 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all {{#if (eq title 'Update Password')}}bg-black text-white{{else}}text-neutral-400 hover:bg-gray-50 hover:text-black{{/if}}">
+                Update Password
+            </a>
+        </div>
+    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('profile-dropdown-btn');
+        const content = document.getElementById('profile-dropdown-content');
+
+        /**
+         * Simple Dropdown Logic
+         * Kita gunakan toggle class 'hidden' dan animasi opacity
+         */
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = content.classList.contains('hidden');
+            
+            if (isHidden) {
+                content.classList.remove('hidden');
+                setTimeout(() => {
+                    content.classList.remove('opacity-0', 'scale-95');
+                }, 10);
+            } else {
+                content.classList.add('opacity-0', 'scale-95');
+                setTimeout(() => {
+                    content.classList.add('hidden');
+                }, 200);
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            content.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => {
+                content.classList.add('hidden');
+            }, 200);
+        });
+    });
+</script>

@@ -14,6 +14,7 @@ const kuppa = {
         web: {
             home:       appFile('Controllers.HomeController'),
             auth:       appFile('Controllers.AuthController'),
+            profile:    appFile('Controllers.ProfileController'),
             socialAuth: appFile('Controllers.SocialAuthController'),
             dashboard:  appFile('Controllers.DashboardController'),
             blog:       appFile('Controllers.BlogController'),

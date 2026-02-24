@@ -6,37 +6,43 @@
                 <a href="{{route 'home'}}" class="group flex items-center shrink-0">
                     <img src="{{asset 'logo/1.1.png'}}" alt="Kuppa.js Logo" class="h-8 w-auto">
                 </a>
-                
                 {{!-- Desktop Links --}}
-                <div class="hidden md:flex gap-8 text-[13px]  tracking-widest font-bold text-neutral-400">
-                    <a href="{{ route 'dashboard' }}" class="hover:text-black transition-colors py-1">Dashboard</a>                    
-                    <a href="{{ route 'blog' }}" class="hover:text-black transition-colors py-1">Blog</a>
-                    <a href="{{ route 'help' }}" class="hover:text-black transition-colors py-1">Help</a>
+                <div class="hidden md:flex gap-8 text-[14px] font-bold text-neutral-400">
+                    
+                    <a href="{{ route 'blog' }}" 
+                    class="{{#if (eq currentRoute 'blog')}}text-black underline {{else}}hover:text-black{{/if}} transition-colors py-1">
+                        Blog
+                    </a>
+                    
+                    <a href="{{ route 'help' }}" 
+                    class="{{#if (eq currentRoute 'help')}}text-black underline {{else}}hover:text-black{{/if}} transition-colors py-1">
+                        Help
+                    </a>
+
+                    {{#if globalUser}}
+                        <a href="{{ route 'dashboard' }}" 
+                        class="{{#if (eq currentRoute 'dashboard')}}text-black underline {{else}}hover:text-black{{/if}} transition-colors py-1">
+                        Dashboard
+                        </a>
+                    {{/if}}
                 </div>
             </div>
 
             {{!-- Right Side (Desktop) --}}
             <div class="hidden md:flex items-center gap-6">
                 {{#if globalUser}}
-                    <div class="flex items-center gap-4">
-                        <span class="text-[11px]  tracking-wider font-bold text-black">{{ globalUser.name }}</span>
-                        <div class="w-9 h-9 rounded-full bg-gray-50 border border-neutral-100 flex items-center justify-center text-black font-bold text-[12px] overflow-hidden">
-                            {{#if globalUser.avatar}}
-                                <img src="{{globalUser.avatar}}" alt="Avatar" class="w-full h-full object-cover">
-                            {{else}}
-                                <span class="lowercase">{{slice (or globalUser.name globalUser.email) 0 1}}</span>
-                            {{/if}}
-                        </div>
-                        <div class="h-4 w-[1px] bg-neutral-100"></div>
+                    <div class="flex items-center gap-6">
+                        <span class="text-[14px]  font-bold text-black ">{{ globalUser.name }}</span>
+                        <div class="h-4 w-[1px] bg-neutral-200"></div>
                         <form action="{{route 'logout'}}" method="POST" class="m-0">
-                            <button type="submit" class="text-[11px]  tracking-wider font-bold text-neutral-400 hover:text-red-600 transition-colors">
+                            <button type="submit" class="text-[14px]  font-bold text-neutral-400 hover:text-red-600 transition-colors">
                                 Sign Out
                             </button>
                         </form>
                     </div>
                 {{else}}
-                    <a href="{{route 'login'}}" class="text-[11px]  tracking-widest font-bold text-neutral-400 hover:text-black transition-colors">Sign In</a>
-                    <a href="{{route 'register'}}" class="px-6 py-3 bg-black text-white text-[11px]  tracking-widest font-bold rounded-xl hover:bg-neutral-800 transition-all active:scale-[0.95]">
+                    <a href="{{route 'login'}}" class="text-[14px]  font-bold text-neutral-400 hover:text-black transition-colors">Sign In</a>
+                    <a href="{{route 'register'}}" class="px-6 py-3 bg-black text-white text-[14px]  font-bold rounded-xl hover:bg-neutral-800 transition-all active:scale-[0.95]">
                         Join Now
                     </a>
                 {{/if}}
@@ -65,7 +71,9 @@
         </div>
 
         <div class="flex flex-col gap-6">
-            <a href="{{route 'dashboard'}}" class="text-2xl font-black text-black">Dashboard</a>
+            {{#if globalUser}}
+                <a href="{{route 'dashboard'}}" class="text-2xl font-black text-black">Dashboard</a>
+            {{/if}}
             <a href="{{ route 'blog' }}" class="text-2xl font-black text-black">Blog</a>
             <a href="{{ route 'help' }}" class="text-2xl font-black text-black">Help</a>
         </div>
@@ -73,27 +81,18 @@
         <div class="mt-auto pb-10">
             {{#if globalUser}}
                 <div class="p-6 bg-gray-50 rounded-[2rem] border border-neutral-100">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 rounded-2xl bg-black flex items-center justify-center text-white font-bold overflow-hidden">
-                            {{#if globalUser.avatar}}
-                                <img src="{{globalUser.avatar}}" alt="Avatar" class="w-full h-full object-cover">
-                            {{else}}
-                                <span class="lowercase text-lg">{{slice (or globalUser.name globalUser.email) 0 1}}</span>
-                            {{/if}}
-                        </div>
-                        <div class="overflow-hidden">
-                            <p class="text-sm font-black text-black truncate">{{globalUser.name}}</p>
-                            <p class="text-xs text-neutral-500 truncate">{{globalUser.email}}</p>
-                        </div>
+                    <div class="mb-6">
+                        <p class="text-sm   font-bold text-neutral-400 mb-1">Logged in as</p>
+                        <p class="text-lg font-black text-black truncate">{{globalUser.name}}</p>
                     </div>
                     <form action="{{route 'logout'}}" method="POST">
-                        <button type="submit" class="w-full py-4 bg-white border border-neutral-200 text-black text-[11px]  tracking-widest font-black rounded-2xl active:scale-95 transition-all">Sign Out</button>
+                        <button type="submit" class="w-full py-4 bg-white border border-neutral-200 text-black text-[14px]  font-black rounded-2xl active:scale-95 transition-all">Sign Out</button>
                     </form>
                 </div>
             {{else}}
                 <div class="grid grid-cols-1 gap-4">
-                    <a href="{{route 'login'}}" class="flex items-center justify-center py-4 text-[11px]  tracking-widest font-black text-neutral-400 border border-neutral-100 rounded-2xl">Sign In</a>
-                    <a href="{{route 'register'}}" class="flex items-center justify-center py-4 text-[11px]  tracking-widest font-black text-white bg-black rounded-2xl">Join Now</a>
+                    <a href="{{route 'login'}}" class="flex items-center justify-center py-4 text-[14px]  font-black text-neutral-400 border border-neutral-100 rounded-2xl">Sign In</a>
+                    <a href="{{route 'register'}}" class="flex items-center justify-center py-4 text-[14px]  font-black text-white bg-black rounded-2xl">Join Now</a>
                 </div>
             {{/if}}
         </div>

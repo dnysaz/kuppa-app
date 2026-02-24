@@ -9,7 +9,6 @@ const mw    = kuppa.middleware;
 
 // --- 1. Public Routes ---
 route.get('/', web.home.index).name('home');
-
 route.get('/help', web.home.help).name('help');
 route.get('/blog', web.blog.index).name('blog');
 
@@ -40,10 +39,10 @@ route.group([mw.auth], (route) => {
     route.get('/dashboard', web.dashboard.index).name('dashboard');
     
     // Profile Management
-    route.get('/dashboard/edit-profile',    web.dashboard.edit).name('profile.edit');
-    route.post('/dashboard/update-profile', web.dashboard.update).name('profile.update');
-    route.get('/dashboard/update-password', web.dashboard.password).name('profile.password');
-    route.post('/dashboard/update-password',web.dashboard.updatePassword).name('profile.password.update');
+    route.get('/profile/edit-profile',    web.profile.edit).name('profile.edit');
+    route.post('/profile/update-profile', web.profile.update).name('profile.update');
+    route.get('/profile/update-password', web.profile.password).name('profile.password');
+    route.post('/profile/update-password',web.profile.updatePassword).name('profile.password.update');
     
     // Authentication Session Management
     route.post('/logout', web.auth.logout).name('logout');

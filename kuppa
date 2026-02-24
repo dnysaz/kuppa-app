@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const crypto = require('crypto'); // Added for key generation
 
 const args = process.argv.slice(2);
 const command = args[0];
@@ -27,6 +28,28 @@ const getEnv = (key, fallback) => {
     return fallback;
 };
 
+/**
+ * Helper: Generate secure APP_KEY and update .env
+ */
+const generateAppKey = () => {
+    const envPath = path.join(process.cwd(), '.env');
+    if (!fs.existsSync(envPath)) return;
+
+    const newKey = crypto.randomBytes(32).toString('hex');
+    let envContent = fs.readFileSync(envPath, 'utf8');
+
+    // Update existing key or append new one
+    if (envContent.includes('APP_KEY=')) {
+        envContent = envContent.replace(/APP_KEY=.*/, `APP_KEY=${newKey}`);
+    } else {
+        const prefix = envContent.length > 0 && !envContent.endsWith('\n') ? '\n' : '';
+        envContent += `${prefix}APP_KEY=${newKey}`;
+    }
+
+    fs.writeFileSync(envPath, envContent);
+    console.log(`Kuppa: Application key [APP_KEY] has been set.`);
+};
+
 const DEFAULT_REPO = "https://github.com/dnysaz/kuppa-core.git";
 const CORE_REPO = getEnv('KUPPA_CORE_REPO', DEFAULT_REPO);
 
@@ -41,7 +64,8 @@ const syncCore = (isUpdate = false) => {
     if (fs.existsSync(packagePath)) {
         try {
             const pkg = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
-            if (pkg.KuppaVersion) targetVersion = pkg.KuppaVersion;
+            // Standardized key name from your package.json
+            if (pkg.kuppaVersion) targetVersion = pkg.kuppaVersion;
         } catch (e) {}
     }
     
@@ -59,10 +83,15 @@ const syncCore = (isUpdate = false) => {
 
         console.log(`Kuppa: Core engine synchronized successfully.`);
 
+        // --- ENVIRONMENT SETUP ---
         if (!fs.existsSync(envPath) && fs.existsSync(envExamplePath)) {
             fs.copyFileSync(envExamplePath, envPath);
             console.log('Kuppa: Created .env from .env.example.');
         }
+
+        // --- AUTOMATIC KEY GENERATION ---
+        generateAppKey();
+
     } catch (error) {
         console.error(`Kuppa: Failed to synchronize core engine!`);
         if (fs.existsSync(tempPath)) fs.rmSync(tempPath, { recursive: true, force: true });

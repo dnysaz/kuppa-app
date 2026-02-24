@@ -5,12 +5,14 @@
 
 // Core & Application Dependencies
 const BaseController = coreFile('controller.BaseController');
-// const Model       = appFile('Models.yourModel'); 
+// const { supabase }   = coreFile('config.Database');
+// const Validation     = coreFile('utils.Validation');
+// const YourModel      = appFile('Models.YourModel'); 
 
 class BlogController extends BaseController {
 
     /**
-     * [GET] Index Page
+     * [GET] Blog Page
      */
     static async index(process) {
         try {

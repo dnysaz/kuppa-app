@@ -53,9 +53,8 @@ class SocialAuthController extends BaseController {
             // Layout context
             const useLayout = false;
 
-            // Render view bridge without layout using Fluent Interface
             return process.view('auth.callback').with({ 
-                layout: useLayout 
+                layout: useLayout   
             });
         } catch (err) {
             process.next(err);
