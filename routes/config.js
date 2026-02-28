@@ -4,7 +4,7 @@
  */
 
 const express = require('express');
-const wrap = coreFile('utils.RouteWrapper');
+const wrap    = coreFile('utils.RouteWrapper');
 
 const kuppa = {
     router: wrap(express.Router()),
@@ -17,7 +17,7 @@ const kuppa = {
             profile:    appFile('Controllers.ProfileController'),
             socialAuth: appFile('Controllers.SocialAuthController'),
             dashboard:  appFile('Controllers.DashboardController'),
-            blog:       appFile('Controllers.BlogController'),
+            admin:      appFile('Controllers.AdminController')
 
             // add more ...
         },
@@ -33,6 +33,7 @@ const kuppa = {
         guest:   appFile('Middleware.GuestMiddleware'),
         apiAuth: coreFile('middleware.ApiAuthMiddleware'),
         db:      coreFile('middleware.DatabaseFeatureMiddleware'),
+        role:    coreFile('middleware.RoleMiddleware')
         // add more ...
     }
 };

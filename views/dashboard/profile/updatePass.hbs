@@ -5,13 +5,9 @@
     {{> brandHeader}}
     {{> submenu}}
 
-    <div class="gap-8 max-w-xl">
+    <div class="gap-8 max-w-xl mb-4">
         
-        {{!-- FLASH MESSAGES: Global & Laravel-style --}}
-        <div class="mb-4">
-            {{{flash flash_error "error"}}}
-            {{{flash flash_success "success"}}}
-        </div>
+        {{> flashMessage}}
 
         <div class="lg:col-span-2 bg-white border border-neutral-200 rounded-xl p-8 shadow-sm">
             {{#if (eq loginProvider "email")}}

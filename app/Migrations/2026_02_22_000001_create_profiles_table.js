@@ -13,8 +13,10 @@ class CreateProfilesTable extends Migration {
             table.string('email').unique();
             table.string('user_name').nullable().unique();
             table.string('full_name').nullable();
+            table.string('role').default('user');
             table.string('avatar_url').nullable();
             table.string('status').nullable();
+            table.string('provider').nullable();
             table.string('last_login').nullable();
             table.text('bio').nullable();
             table.timestamps();
@@ -25,14 +27,15 @@ class CreateProfilesTable extends Migration {
             CREATE OR REPLACE FUNCTION public.handle_new_profile()
             RETURNS TRIGGER AS $$
             BEGIN
-              INSERT INTO public.profiles (id, email, full_name, user_name, status, avatar_url)
+              INSERT INTO public.profiles (id, email, full_name, user_name, status, avatar_url, provider)
               VALUES (
                 new.id, 
                 new.email, 
                 new.raw_user_meta_data->>'full_name', 
                 split_part(new.email, '@', 1), -- Mengambil username dari email (sebelum @)
                 'active',
-                new.raw_user_meta_data->>'avatar_url'
+                new.raw_user_meta_data->>'avatar_url',
+                new.raw_app_meta_data->>'provider' -- Mengambil data provider (email, google, dll)
               );
               RETURN new;
             END;

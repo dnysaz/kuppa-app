@@ -1,41 +1,44 @@
 /**
  * Profile Model - Kuppa Framework
- * Handles data logic for the 'profiles' table
- * Standardized by Ketut Dana
+ * Standardized for KUPPA ORM - FINAL PRO
+ * Optimized by Ketut Dana
  */
 
-const BaseModel     = coreFile('model.BaseModel');
-const { supabase }  = coreFile('config.Database');
+const BaseModel = coreFile('model.BaseModel');
+const { supabase } = coreFile('config.Database');
 
 class Profile extends BaseModel {
-    constructor() {
-        /**
-         * Pass the table name 'profiles' to the BaseModel
-         */
-        super('profiles');
+    /**
+     * Model Configuration
+     */
+    static table = 'profiles';
+    
+    static fillable = [
+        'email',
+        'user_name',
+        'full_name', 
+        'avatar_url',
+        'role',
+        'status', 
+        'provider',
+        'last_login',
+        'bio'
+    ];
 
-        /**
-         * Mass Assignment Protection
-         */
-        this.fillable = [
-            'email',
-            'user_name',
-            'full_name', 
-            'avatar_url', 
-            'status', 
-            'last_login',
-            'bio'
-        ];
-    }
+    /**
+     * Registered Relations
+     * Allow blog to call with('profiles') or profile call with('blogs')
+     */
+    static relations = {
+        blogs: true
+    };
 
-    // --- AUTHENTICATION LOGIC ---
+    // --- AUTHENTICATION LOGIC (STATIC) ---
 
     /**
      * Attempt to login via Supabase Auth
-     * @param {string} email 
-     * @param {string} password 
      */
-    async attemptLogin(email, password) {
+    static async attemptLogin(email, password) {
         const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password
@@ -54,11 +57,8 @@ class Profile extends BaseModel {
 
     /**
      * Create a new account in Supabase Auth
-     * @param {string} name 
-     * @param {string} email 
-     * @param {string} password 
      */
-    async createAccount(name, email, password) {
+    static async createAccount(name, email, password) {
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
@@ -71,21 +71,20 @@ class Profile extends BaseModel {
         return data;
     }
 
-    // --- QUERY LOGIC ---
+    // --- QUERY LOGIC (STATIC) ---
 
-    async findByEmail(email) {
-        return await this.findBy('email', email);
+    static async findByEmail(email) {
+        return await this.where('email', email).first();
     }
 
-    async findActiveByEmail(email) {
-        return await this.findWhere({ 
-            email: email, 
-            status: 'active' 
-        });
+    static async findActiveByEmail(email) {
+        return await this.where('email', email)
+                         .where('status', 'active')
+                         .first();
     }
 }
 
 /**
- * Exporting instance to match Ketut's original architecture
+ * Exporting Class directly for Static Access (FINAL PRO Standard)
  */
-module.exports = new Profile();
+module.exports = Profile;

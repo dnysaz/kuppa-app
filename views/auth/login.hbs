@@ -3,9 +3,7 @@
 
 <div class="min-h-[80vh] flex flex-col items-center justify-center px-4">
     
-    {{!-- Flash Message Shortcodes --}}
-    {{{ flash errorMessage 'error' }}}
-    {{{ flash message 'success' }}}
+    {{> flashMessage}}
 
     <div class="max-w-md w-full bg-white border border-gray-100 rounded-[2.5rem] p-10">
         <header class="text-center mb-10">
@@ -22,8 +20,9 @@
             {{!-- Email Input --}}
             <div class="space-y-2">
                 <label for="email" class="block text-[10px] uppercase tracking-widest font-bold text-gray-400 ml-1">Email Address</label>
-                <input type="email" name="email" id="email" value="{{ oldEmail }}" required 
-                    class="w-full px-5 py-4 bg-gray-50 border {{#if errorMessage}}border-red-200 bg-red-50/30{{else}}border-gray-100{{/if}} rounded-2xl focus:ring-4 focus:ring-black/5 focus:bg-white focus:border-black outline-none transition-all duration-300 placeholder:text-gray-300"
+                {{!-- VALUE diubah ke old.email & BORDER cek flash_error --}}
+                <input type="email" name="email" id="email" value="{{ old.email }}" required 
+                    class="w-full px-5 py-4 bg-gray-50 border {{#if flash_error}}border-red-200 bg-red-50/30{{else}}border-gray-100{{/if}} rounded-2xl focus:ring-4 focus:ring-black/5 focus:bg-white focus:border-black outline-none transition-all duration-300 placeholder:text-gray-300"
                     placeholder="name@example.com">
             </div>
 
@@ -35,8 +34,9 @@
                         Forgot?
                     </a>
                 </div>
+                {{!-- BORDER cek flash_error --}}
                 <input type="password" name="password" id="password" required 
-                    class="w-full px-5 py-4 bg-gray-50 border {{#if errorMessage}}border-red-200 bg-red-50/30{{else}}border-gray-100{{/if}} rounded-2xl focus:ring-4 focus:ring-black/5 focus:bg-white focus:border-black outline-none transition-all duration-300 placeholder:text-gray-300"
+                    class="w-full px-5 py-4 bg-gray-50 border {{#if flash_error}}border-red-200 bg-red-50/30{{else}}border-gray-100{{/if}} rounded-2xl focus:ring-4 focus:ring-black/5 focus:bg-white focus:border-black outline-none transition-all duration-300 placeholder:text-gray-300"
                     placeholder="••••••••">
             </div>
 

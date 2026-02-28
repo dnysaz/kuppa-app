@@ -1,5 +1,7 @@
 /**
  * Kuppa API Routes Configuration
+ * Updated: Using Array Syntax for Instance-based Controllers
+ * Optimized by Ketut Dana
  */
 
 const kuppa = require('./config');
@@ -15,8 +17,11 @@ route.group([mw.db], (route) => {
     // Default API Versioning
     route.group({ prefix: '/v1' }, (route) => {
         
-        // Example of a general resource routing
-        // route.get('/resource', api.someController.index);
+        // Example of a general resource routing using Instance Method
+        // route.get('/resource', [api.someController, 'index']).name('api.v1.resource');
+        
+        // Example of protected API route
+        // route.get('/user', [api.userController, 'show'], [mw.apiAuth]);
         
     });
 

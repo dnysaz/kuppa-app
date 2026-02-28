@@ -1,0 +1,10 @@
+{{!-- FLASH MESSAGES --}}
+<div class="flash-messages">
+    {{#if flash_error}}
+        {{{flash flash_error "error"}}}
+    {{/if}}
+
+    {{#if flash_success}}
+        {{{flash flash_success "success"}}}
+    {{/if}}
+</div>

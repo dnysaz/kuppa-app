@@ -2,17 +2,12 @@
 {{set "description" description}}
 
 <section>
-
     {{> brandHeader}}
-
     {{> submenu}}
 
     <div class="gap-8 max-w-xl mb-4">
-        {{!-- FLASH MESSAGES --}}
-        <div class="max-w-md">
-            {{{flash flash_error "error"}}}
-            {{{flash flash_success "success"}}}
-        </div>
+
+        {{> flashMessage}}
 
         <div class="lg:col-span-2 bg-white border border-neutral-200 rounded-xl p-8 ">
             <form action="{{route 'profile.update'}}" method="POST" enctype="multipart/form-data" class="space-y-8">
@@ -111,5 +106,4 @@
             }
         }
     </script>
-
 </section>
