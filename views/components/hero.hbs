@@ -1,110 +1,84 @@
 <section>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
-        <div class="space-y-5">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-16 mb-20">
+        <div class="space-y-6">
             <h3 class="text-[10px] font-bold text-black uppercase tracking-widest border-b border-black pb-2 inline-block">Environment</h3>
-            <ul class="space-y-3 text-[13px] text-neutral-500 font-medium">
-                <li class="flex justify-between border-b border-neutral-50 pb-1">
-                    <span>Status</span>
-                    <span class="text-green-500 font-bold italic">Ready</span>
+            <ul class="space-y-4 text-[13px] text-neutral-600">
+                <li class="flex justify-between items-center border-b border-neutral-100 pb-3">
+                    <span class="text-neutral-400">Status</span>
+                    <span class="font-medium text-black">Ready</span>
                 </li>
-                <li class="flex justify-between border-b border-neutral-50 pb-1">
-                    <span>Database</span>
-                    <span class="text-black italic font-semibold">{{#if supabaseActive}}Connected{{else}}Disconnected{{/if}}</span>
+                <li class="flex justify-between items-center border-b border-neutral-100 pb-3">
+                    <span class="text-neutral-400">Database</span>
+                    <span class="font-medium text-black">{{#if supabaseActive}}Connected{{else}}Disconnected{{/if}}</span>
                 </li>
-                <li class="flex justify-between border-b border-neutral-50 pb-1">
-                    <span>Engine</span>
-                    <span class="text-black">Node.js 23.7</span>
+                <li class="flex justify-between items-center border-b border-neutral-100 pb-3">
+                    <span class="text-neutral-400">Engine</span>
+                    <span class="font-medium text-black">Node.js 23.7</span>
                 </li>
             </ul>
         </div>
 
-        <div class="space-y-5">
-            <h3 class="text-[10px] font-bold text-black uppercase tracking-widest border-b border-black pb-2 inline-block">Get Started</h3>
-            <div class="space-y-3">
+        <div class="space-y-6">
+            <h3 class="text-[10px] font-bold text-black uppercase tracking-widest border-b border-black pb-2 inline-block">Resources</h3>
+            <div class="space-y-4">
                 {{#if supabaseActive}}
-                <a href="{{route 'dashboard'}}" class="group flex items-center justify-between text-[13px] text-neutral-600 hover:text-black transition-colors">
-                    <span>Open Dashboard</span>
-                    <span class="transform group-hover:translate-x-1 transition-transform">&rarr;</span>
+                <a href="{{route 'dashboard'}}" class="flex items-center justify-between text-[13px] hover:text-neutral-500 transition-colors border-b border-neutral-100 pb-3">
+                    <span class="font-medium">Dashboard</span>
+                    <span>&rarr;</span>
                 </a>
                 {{else}}
-                <div class="flex items-center justify-between text-[13px] text-neutral-300 cursor-not-allowed">
-                    <span>Dashboard (Disabled)</span>
+                <div class="flex items-center justify-between text-[13px] text-neutral-300 border-b border-neutral-100 pb-3 cursor-not-allowed">
+                    <span class="font-medium">Dashboard</span>
                     <span>&times;</span>
                 </div>
                 {{/if}}
-                <a href="https://github.com/ketutdana/kuppa-docs" target="_blank" class="group flex items-center justify-between text-[13px] text-neutral-600 hover:text-black transition-colors">
-                    <span>Read Documentation</span>
-                    <span class="transform group-hover:translate-x-1 transition-transform">&rarr;</span>
+                <a href="https://github.com/ketutdana/kuppa-docs" target="_blank" class="flex items-center justify-between text-[13px] hover:text-neutral-500 transition-colors border-b border-neutral-100 pb-3">
+                    <span class="font-medium">Documentation</span>
+                    <span>&rarr;</span>
                 </a>
             </div>
         </div>
     </div>
 
-    {{!-- Quick Start Code --}}
-    <div class="bg-neutral-50 rounded-xl p-8 border border-neutral-100">
-        <p class="text-[12px] text-neutral-700 font-mono">// Edit this page in app/Views/home.hbs</p>
-    </div>
-
-    {{!-- Alert Configuration --}}
     {{#unless supabaseActive}}
-    <div class="mb-10 space-y-4 mt-12">
-        {{!-- Step 1: Env --}}
-        <div class="p-5 bg-orange-50 border-l-4 border-orange-400 rounded-r-xl flex items-start space-x-4 shadow-sm">
-            <div class="flex-shrink-0">
-                <svg class="h-5 w-5 text-orange-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-                </svg>
+    <div class="mt-16 space-y-12">
+        <h3 class="text-[10px] font-bold text-black uppercase tracking-widest border-b border-black pb-2 inline-block">Setup Steps</h3>
+        
+        <div class="space-y-12">
+            {{!-- Step 1 --}}
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="text-[10px] font-bold text-neutral-400 uppercase tracking-widest pt-1">01. Config</div>
+                <div class="md:col-span-3 space-y-2">
+                    <p class="text-[13px] leading-relaxed">Update your <code class="font-mono text-black">.env</code> file with your project credentials:</p>
+                    <div class="bg-neutral-100 p-4 rounded text-[12px] font-mono text-neutral-600">
+                        SUPABASE_URL = [Your Project URL]<br>
+                        SUPABASE_KEY = [Your Project ANON_KEY]
+                    </div>
+                </div>
             </div>
-            <div>
-                <h3 class="text-sm font-bold text-orange-800 uppercase tracking-tight">Step 1: Configuration</h3>
-                <p class="text-[13px] text-orange-700 mt-1 leading-relaxed">
-                    Fill <code class="bg-orange-100 px-1 rounded font-mono">SUPABASE_URL</code> and <code class="bg-orange-100 px-1 rounded font-mono">SUPABASE_KEY</code> in your <code class="bg-orange-100 px-1 rounded font-mono">.env</code>.
-                </p>
-            </div>
-        </div>
 
-        {{!-- Step 2: SQL Bridge with Copy Button --}}
-        <div class="p-6 bg-blue-50 border-l-4 border-blue-500 rounded-r-xl shadow-sm">
-            <div class="flex items-center justify-between mb-3">
-                <h3 class="text-sm font-bold text-blue-900 uppercase tracking-tight">Step 2: Database Bridge</h3>
-                <button onclick="copySQL()" id="copy-btn" class="text-[10px] font-bold bg-blue-600 text-white px-3 py-1 rounded-full hover:bg-blue-700 transition-all active:scale-95 shadow-sm uppercase tracking-widest">
-                    Copy SQL
-                </button>
+            {{!-- Step 2 --}}
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="text-[10px] font-bold text-neutral-400 uppercase tracking-widest pt-1">02. Initialize</div>
+                <div class="md:col-span-3 space-y-2">
+                    <p class="text-[13px] leading-relaxed">Run the initialization command. The terminal will provide the SQL setup if needed:</p>
+                    <div class="bg-black text-white p-4 rounded text-[12px] font-mono">
+                        $ node kuppa db
+                    </div>
+                </div>
             </div>
-            <p class="text-[12px] text-blue-800 mb-4 leading-relaxed">
-                Run this SQL in your <b>Supabase SQL Editor</b> to enable remote migrations:
-            </p>
-            <div class="relative group">
-                <pre id="sql-code" class="bg-blue-900/5 p-4 rounded-lg text-[11px] font-mono text-blue-900 overflow-x-auto border border-blue-100">
-CREATE OR REPLACE FUNCTION kuppa_execute_sql(sql_query text)
-RETURNS void AS $$
-BEGIN
-EXECUTE sql_query;
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
 
-GRANT EXECUTE ON FUNCTION kuppa_execute_sql(text) TO service_role;
-GRANT EXECUTE ON FUNCTION kuppa_execute_sql(text) TO postgres;</pre>
+            {{!-- Step 3 --}}
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="text-[10px] font-bold text-neutral-400 uppercase tracking-widest pt-1">03. Migrate</div>
+                <div class="md:col-span-3 space-y-2">
+                    <p class="text-[13px] leading-relaxed">Sync your local schema with Supabase:</p>
+                    <div class="bg-black text-white p-4 rounded text-[12px] font-mono">
+                        $ node kuppa migrate
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <script>
-        function copySQL() {
-            const code = document.getElementById('sql-code').innerText;
-            const btn = document.getElementById('copy-btn');
-            
-            navigator.clipboard.writeText(code).then(() => {
-                const originalText = btn.innerText;
-                btn.innerText = 'Copied!';
-                btn.classList.replace('bg-blue-600', 'bg-green-600');
-                
-                setTimeout(() => {
-                    btn.innerText = originalText;
-                    btn.classList.replace('bg-green-600', 'bg-blue-600');
-                }, 2000);
-            });
-        }
-    </script>
     {{/unless}}
 </section>
