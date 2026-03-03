@@ -9,13 +9,8 @@
                 {{!-- Desktop Links --}}
                 <div class="hidden md:flex gap-8 text-[14px] font-bold text-neutral-400">
                     
-                    <a href="{{ route 'blog' }}" 
-                    class="{{#if (eq currentRoute 'blog')}}text-black underline {{else}}hover:text-black{{/if}} transition-colors py-1">
-                        Blog
-                    </a>
-                    
                     <a href="{{ route 'help' }}" 
-                    class="{{#if (eq currentRoute 'help')}}text-black underline {{else}}hover:text-black{{/if}} transition-colors py-1">
+                        class="{{#if (eq currentRoute 'help')}}text-black underline {{else}}hover:text-black{{/if}} transition-colors py-1">
                         Help
                     </a>
 
@@ -83,7 +78,6 @@
             {{#if globalUser}}
                 <a href="{{route 'dashboard'}}" class="text-2xl font-black text-black">Dashboard</a>
             {{/if}}
-            <a href="{{ route 'blog' }}" class="text-2xl font-black text-black">Blog</a>
             <a href="{{ route 'help' }}" class="text-2xl font-black text-black">Help</a>
         </div>
 
