@@ -37,7 +37,7 @@ class ProfileController extends BaseController {
          */
         let displayAvatar = profile?.avatar_url;
         if (displayAvatar && !displayAvatar.startsWith('http')) {
-            displayAvatar = `/uploads/${displayAvatar}`;
+            displayAvatar = `${displayAvatar}`;
         }
 
         const userData = {
@@ -86,7 +86,7 @@ class ProfileController extends BaseController {
 
         // Assign avatar only if file is uploaded
         if (file && file.filename) {
-            updateData.avatar_url = `avatars/${file.filename}`;
+            updateData.avatar_url = `/uploads/avatars/${file.filename}`;
         }
 
         // 3. Database Execution via Static Model

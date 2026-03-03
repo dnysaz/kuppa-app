@@ -39,7 +39,20 @@ route.group([mw.guest], (route) => {
 route.group([mw.auth], (route) => {
     // Main Dashboard
     route.get('/dashboard', [web.dashboard, 'index']).name('dashboard');
- 
+
+    // Blog Dashboard
+    route.get('/blog',  [web.blog, 'index']).name('blog');
+    route.get('/my-blog',  [web.blog, 'myBlog']).name('my.blog');
+    route.post('/blog',  [web.blog, 'store']).name('blog.store');
+    route.get('/blog/show/:slug', [web.blog, 'show']).name('blog.show');
+    route.get('/blog/edit/:slug', [web.blog, 'edit']).name('blog.edit');
+    route.post('/blog/update/:slug', [web.blog, 'update']).name('blog.update');
+    route.post('/blog/delete/:slug', [web.blog, 'destroy']).name('blog.delete');
+
+
+
+
+    
     // Profile Management
     route.get('/profile/edit-profile',     [web.profile, 'edit']).name('profile.edit');
     route.post('/profile/update-profile',  [web.profile, 'update']).name('profile.update');
