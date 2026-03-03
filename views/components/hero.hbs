@@ -76,15 +76,30 @@
             </p>
             <div class="relative group">
                 <pre id="sql-code" class="bg-blue-900/5 p-4 rounded-lg text-[11px] font-mono text-blue-900 overflow-x-auto border border-blue-100">
-CREATE OR REPLACE FUNCTION kuppa_execute_sql(sql_query text)
+DROP FUNCTION IF EXISTS public.kuppa_execute_sql(text);
+
+CREATE OR REPLACE FUNCTION public.kuppa_execute_sql(sql_query text)
 RETURNS void AS $$
 BEGIN
-EXECUTE sql_query;
+    EXECUTE sql_query;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-GRANT EXECUTE ON FUNCTION kuppa_execute_sql(text) TO service_role;
-GRANT EXECUTE ON FUNCTION kuppa_execute_sql(text) TO postgres;</pre>
+GRANT EXECUTE ON FUNCTION public.kuppa_execute_sql(text) TO anon, authenticated, service_role;
+
+CREATE TABLE IF NOT EXISTS public.kuppa_migrations (
+    id SERIAL PRIMARY KEY,
+    migration TEXT NOT NULL UNIQUE,
+    batch INTEGER NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.kuppa_migrations ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Kuppa allow all" ON public.kuppa_migrations;
+CREATE POLICY "Kuppa allow all" ON public.kuppa_migrations 
+FOR ALL TO anon, authenticated USING (true) WITH CHECK (true);
+
+NOTIFY pgrst, 'reload schema';</pre>
             </div>
         </div>
     </div>
