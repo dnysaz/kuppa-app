@@ -23,7 +23,7 @@ const kuppa = {
         },
         api: {
             // General API Controllers
-            // post: appFile('Controllers.Api.PostController'),
+            test:       appFile('Controllers.Api.TestApiController'),
         }
     },
 
