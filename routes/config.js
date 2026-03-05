@@ -7,7 +7,8 @@ const express = require('express');
 const wrap    = coreFile('utils.RouteWrapper');
 
 const kuppa = {
-    router: wrap(express.Router()),
+    
+    createRouter: () => wrap(express.Router()),
 
     // --- Controller Namespace ---
     controllers: {
@@ -22,8 +23,9 @@ const kuppa = {
             // add more ...
         },
         api: {
+
             // General API Controllers
-            test:       appFile('Controllers.Api.TestApiController'),
+            
         }
     },
 

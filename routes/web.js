@@ -5,7 +5,7 @@
  */
 
 const kuppa = require('./config');
-const route = kuppa.router;
+const route = kuppa.createRouter();
 const web   = kuppa.controllers.web;
 const mw    = kuppa.middleware;
 

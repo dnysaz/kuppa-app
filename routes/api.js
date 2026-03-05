@@ -1,16 +1,17 @@
 /**
- * Kuppa API Routes Configuration
- * Updated: Using Array Syntax for Instance-based Controllers
- * Optimized by Ketut Dana
+ * routes/api.js
  */
-
 const kuppa = require('./config');
-const route = kuppa.router;
+const route = kuppa.createRouter();
 const api   = kuppa.controllers.api;
+const mw    = kuppa.middleware;
 
-/**
- * Kuppa API Routes
- */
-route.get('/test', [api.test, 'index']).name('api.test');
+// 1. Grup rute yang butuh Auth
+route.group([mw.apiAuth], (route) => {
+
+    // route.get('/endpoint',[api.test, 'index']).name('endpoint');
+
+});
+
 
 module.exports = route;

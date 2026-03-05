@@ -4,7 +4,7 @@
  * Ultra Clean Version: No redundant try-catch (Handled by RouteWrapper)
  */
 
-const BaseController = coreFile('controller.BaseController');
+const BaseController    = coreFile('controller.BaseController');
 // const { supabase }   = coreFile('config.Database');
 // const Validation     = coreFile('utils.Validation');
 // const Model          = appFile('Models.yourModel'); 

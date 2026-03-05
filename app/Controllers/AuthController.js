@@ -83,8 +83,7 @@ class AuthController extends BaseController {
             }
 
             // Call static method from Profile model
-            const sessionData = await Profile.attemptLogin(process.body.email, process.body.password);
-            
+            const sessionData = await Profile.attemptLogin(process.body.email, process.body.password);            
             // Sync Session
             Session.create(process.res, sessionData.access_token);
             process.req.session.user_email = process.body.email;

@@ -1,7 +1,13 @@
 /**
  * AuthMiddleware - Kuppa Framework
+ * FIXED: Added API bypass to prevent redirecting API calls
  */
 module.exports = (req, res, next) => {
+
+    if (req.originalUrl.startsWith('/api')) {
+        return next();
+    }
+
     const user = res.locals.user;
 
     if (!user) {
@@ -10,10 +16,7 @@ module.exports = (req, res, next) => {
         return res.redirect(loginPath);
     }
 
-    // Titipkan di req (untuk diakses sebagai process.user)
     req.user = user; 
-    
-    // Pastikan res.locals juga tetap pegang data (untuk cadangan)
     res.locals.user = user;
 
     next();

@@ -4,10 +4,10 @@
  * Cleaned: No more manual try-catch (Handled by RouteWrapper)
  */
 
-const BaseController = coreFile('controller.BaseController');
+const BaseController    = coreFile('controller.BaseController');
 // const { supabase }   = coreFile('config.Database');
 // const Validation     = coreFile('utils.Validation');
-const Profile      = appFile('Models.Profile'); 
+const Profile           = appFile('Models.Profile'); 
 
 class HomeController extends BaseController {
     
