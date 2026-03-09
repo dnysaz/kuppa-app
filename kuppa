@@ -87,6 +87,14 @@ const syncCore = (isUpdate = false) => {
 
         generateAppKey();
 
+        const serverJs = path.join(process.cwd(), 'Server.js');
+        if (fs.existsSync(serverJs)) {
+            const time = new Date();
+            fs.utimesSync(serverJs, time, time);
+        }
+        
+        console.log(`\x1b[32mKuppa: Engine installed/updated successfully. Restarting...\x1b[0m`);
+
     } catch (error) {
         console.error(`\x1b[31mKuppa: Failed to synchronize core engine!\x1b[0m`);
         console.error(`Check your internet connection or repository access.`);
