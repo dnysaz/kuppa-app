@@ -1,10 +1,10 @@
 {
   "watch": [
     "Server.js",
-    "Core/**/*.js",
-    "App/**/*.js",
-    "Routes/**/*.js",
-    "Views/**/*.hbs",
+    "Core/",
+    "App/",
+    "Routes/",
+    "Views/",
     ".env"
   ],
   "ext": "js,hbs,json,env",
@@ -12,9 +12,9 @@
     "node_modules/",
     "Public/",
     "Tests/",
-    "Core/storage/",
-    "Storage/"
+    "Storage/",
+    "Core/storage/"
   ],
-  "delay": "100",
+  "delay": "500",
   "legacyWatch": false
 }

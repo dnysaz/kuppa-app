@@ -13,6 +13,8 @@
         "kuppa:install": "node kuppa run:install",
         "kuppa:update": "node kuppa run:update",
         "kuppa:build": "node kuppa run:build",
+        "install:dev": "node kuppa run:install && npm run dev",
+        "update:dev": "node kuppa run:update && npm run dev",
         "make:controller": "node kuppa make:controller",
         "make:model": "node kuppa make:model",
         "make:middleware": "node kuppa make:middleware",
