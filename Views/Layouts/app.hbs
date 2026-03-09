@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{#if (get "title")}}{{get "title"}} | {{/if}}{{ appName }}</title>
+    <meta name="description" content="{{get "description" default="Build something amazing with Kuppa.Js - The minimalist javascript supabase framework"}}">
+    <link rel="icon" type="image/png" href="{{asset 'Logo/1.3.png'}}">
+    <link rel="apple-touch-icon" href="{{asset 'Logo/1.3.png'}}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen pt-24">
+
+    {{!-- include navbar from components --}}
+    {{> navbar }}
+
+    {{!-- main body: flex-grow pushing footer down --}}
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 md:px-0">
+
+        {{{ body }}}
+
+    </main>
+
+    {{!-- include footer from components --}}
+    {{> footer }}
+
+</body>
+</html>

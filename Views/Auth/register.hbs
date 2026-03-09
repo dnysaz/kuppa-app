@@ -1,0 +1,65 @@
+{{set "title" title}}
+{{set "description" description}}
+
+<div class="min-h-[80vh] flex flex-col items-center justify-center px-4">
+    
+    {{> flashMessage}}
+
+    <div class="max-w-md w-full bg-white border border-gray-100 rounded-[2.5rem] p-10">
+        <header class="text-center mb-10">
+            <a href="{{route 'home'}}" class="inline-block mb-6 transform hover:scale-105 transition-transform">
+                <img src="{{asset 'Logo/1.3.png'}}" alt="Kuppa.js Logo" class="h-12 w-auto mx-auto">
+            </a>
+            <h1 class="text-3xl font-black text-gray-900 tracking-tight">
+                Create Account
+            </h1>
+            <p class="text-sm text-gray-400 mt-2">Join us to start your journey with Kuppa.js</p>
+        </header>
+
+        <form action="{{route 'register.post'}}" method="POST" class="space-y-5">
+            {{!-- Full Name Input --}}
+            <div class="space-y-2">
+                <label for="name" class="block text-[10px] uppercase tracking-widest font-bold text-gray-400 ml-1">Full Name</label>
+                <input type="text" name="name" id="name" value="{{ old.name }}" required 
+                    class="w-full px-5 py-4 bg-gray-50 border {{#if flash_error}}border-red-200 bg-red-50/30{{else}}border-gray-100{{/if}} rounded-2xl focus:ring-4 focus:ring-black/5 focus:bg-white focus:border-black outline-none transition-all duration-300 placeholder:text-gray-300"
+                    placeholder="John Doe">
+            </div>
+
+            {{!-- Email Address Input --}}
+            <div class="space-y-2">
+                <label for="email" class="block text-[10px] uppercase tracking-widest font-bold text-gray-400 ml-1">Email Address</label>
+                <input type="email" name="email" id="email" value="{{ old.email }}" required 
+                    class="w-full px-5 py-4 bg-gray-50 border {{#if flash_error}}border-red-200 bg-red-50/30{{else}}border-gray-100{{/if}} rounded-2xl focus:ring-4 focus:ring-black/5 focus:bg-white focus:border-black outline-none transition-all duration-300 placeholder:text-gray-300"
+                    placeholder="name@example.com">
+            </div>
+
+            {{!-- Password Input --}}
+            <div class="space-y-2">
+                <label for="password" class="block text-[10px] uppercase tracking-widest font-bold text-gray-400 ml-1">Password</label>
+                <input type="password" name="password" id="password" required 
+                    class="w-full px-5 py-4 bg-gray-50 border {{#if flash_error}}border-red-200 bg-red-50/30{{else}}border-gray-100{{/if}} rounded-2xl focus:ring-4 focus:ring-black/5 focus:bg-white focus:border-black outline-none transition-all duration-300 placeholder:text-gray-300"
+                    placeholder="••••••••">
+            </div>
+
+            {{!-- Confirm Password Input --}}
+            <div class="space-y-2">
+                <label for="password_confirmation" class="block text-[10px] uppercase tracking-widest font-bold text-gray-400 ml-1">Confirm Password</label>
+                <input type="password" name="password_confirmation" id="password_confirmation" required 
+                    class="w-full px-5 py-4 bg-gray-50 border {{#if flash_error}}border-red-200 bg-red-50/30{{else}}border-gray-100{{/if}} rounded-2xl focus:ring-4 focus:ring-black/5 focus:bg-white focus:border-black outline-none transition-all duration-300 placeholder:text-gray-300"
+                    placeholder="••••••••">
+            </div>
+
+            {{!-- Submit Button --}}
+            <button type="submit" 
+                class="w-full py-4 bg-black text-white rounded-2xl font-bold hover:bg-neutral-800 transform active:scale-[0.97] transition-all duration-300 mt-4">
+                Create Account
+            </button>
+        </form>
+
+        <footer class="mt-10 text-center">
+            <p class="text-xs text-gray-400 font-medium">
+                Already have an account? <a href="{{route 'login'}}" class="text-black font-bold hover:underline ml-1">Sign In</a>
+            </p>
+        </footer>
+    </div>
+</div>

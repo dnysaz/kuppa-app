@@ -1,0 +1,130 @@
+<nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" id="main-nav">
+    <div class="max-w-7xl mx-auto px-4 md:px-0">
+        <div class="flex justify-between h-20 items-center">
+            {{!-- Left Side --}}
+            <div class="flex items-center gap-10">
+                <a href="{{route 'home'}}" class="group flex items-center shrink-0">
+                    <img src="{{asset 'Logo/1.1.png'}}" alt="Kuppa.js Logo" class="h-8 w-auto">
+                </a>
+                {{!-- Desktop Links --}}
+                <div class="hidden md:flex gap-8 text-[14px] font-bold text-neutral-400">
+                    
+                    <a href="{{ route 'help' }}" 
+                        class="{{#if (eq currentRoute 'help')}}text-black underline {{else}}hover:text-black{{/if}} transition-colors py-1">
+                        Help
+                    </a>
+
+                    {{#if globalUser}}
+                        {{!-- Dashboard link for all logged in users --}}
+                        <a href="{{ route 'dashboard' }}" 
+                        class="{{#if (eq currentRoute 'dashboard')}}text-black underline {{else}}hover:text-black{{/if}} transition-colors py-1">
+                        Dashboard
+                        </a>
+
+                        {{!-- Admin link only for role admin --}}
+                        {{#if (eq userRole 'admin')}}
+                            <a href="{{ route 'admin' }}" 
+                            class="{{#if (eq currentRoute 'admin')}}text-black underline {{else}}hover:text-black{{/if}} transition-colors py-1">
+                            Admin Panel
+                            </a>
+                        {{/if}}
+                    {{/if}}
+                </div>
+            </div>
+
+            {{!-- Right Side (Desktop) --}}
+            <div class="hidden md:flex items-center gap-6">
+                {{#if globalUser}}
+                    <div class="flex items-center gap-6">
+                        <span class="text-[14px]  font-bold text-black ">{{ globalUser.name }}</span>
+                        <div class="h-4 w-[1px] bg-neutral-200"></div>
+                        <form action="{{route 'logout'}}" method="POST" class="m-0">
+                            <button type="submit" class="text-[14px]  font-bold text-neutral-400 hover:text-red-600 transition-colors">
+                                Sign Out
+                            </button>
+                        </form>
+                    </div>
+                {{else}}
+                    <a href="{{route 'login'}}" class="text-[14px]  font-bold text-neutral-400 hover:text-black transition-colors">Sign In</a>
+                    <a href="{{route 'register'}}" class="px-6 py-3 bg-black text-white text-[14px]  font-bold rounded-xl hover:bg-neutral-800 transition-all active:scale-[0.95]">
+                        Join Now
+                    </a>
+                {{/if}}
+            </div>
+
+            {{!-- Mobile Menu Button --}}
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-button" class="w-10 h-10 flex items-center justify-center text-black bg-gray-50 border border-neutral-100 rounded-xl focus:outline-none active:scale-90 transition-all">
+                    <svg id="menu-icon" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{!-- Mobile Menu Overlay --}}
+    <div id="mobile-menu" class="fixed inset-0 bg-white z-[60] flex flex-col p-6 translate-x-full transition-transform duration-500 ease-in-out md:hidden">
+        <div class="flex justify-between items-center mb-12">
+            <img src="{{asset 'Logo/1.1.png'}}" alt="Logo" class="h-7 w-auto">
+            <button id="close-menu" class="w-10 h-10 flex items-center justify-center bg-gray-50 rounded-xl">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="flex flex-col gap-6">
+            {{#if globalUser}}
+                <a href="{{route 'dashboard'}}" class="text-2xl font-black text-black">Dashboard</a>
+            {{/if}}
+            <a href="{{ route 'help' }}" class="text-2xl font-black text-black">Help</a>
+        </div>
+
+        <div class="mt-auto pb-10">
+            {{#if globalUser}}
+                <div class="p-6 bg-gray-50 rounded-[2rem] border border-neutral-100">
+                    <div class="mb-6">
+                        <p class="text-sm   font-bold text-neutral-400 mb-1">Logged in as</p>
+                        <p class="text-lg font-black text-black truncate">{{globalUser.name}}</p>
+                    </div>
+                    <form action="{{route 'logout'}}" method="POST">
+                        <button type="submit" class="w-full py-4 bg-white border border-neutral-200 text-black text-[14px]  font-black rounded-2xl active:scale-95 transition-all">Sign Out</button>
+                    </form>
+                </div>
+            {{else}}
+                <div class="grid grid-cols-1 gap-4">
+                    <a href="{{route 'login'}}" class="flex items-center justify-center py-4 text-[14px]  font-black text-neutral-400 border border-neutral-100 rounded-2xl">Sign In</a>
+                    <a href="{{route 'register'}}" class="flex items-center justify-center py-4 text-[14px]  font-black text-white bg-black rounded-2xl">Join Now</a>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+</nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const menuButton = document.getElementById('mobile-menu-button');
+        const closeButton = document.getElementById('close-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const nav = document.getElementById('main-nav');
+
+        // Toggle Mobile Menu
+        const toggleMenu = () => {
+            mobileMenu.classList.toggle('translate-x-full');
+            document.body.classList.toggle('overflow-hidden');
+        };
+
+        if (menuButton) menuButton.addEventListener('click', toggleMenu);
+        if (closeButton) closeButton.addEventListener('click', toggleMenu);
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 20) {
+                nav.classList.add('bg-white/80', 'backdrop-blur-md', 'border-b', 'border-neutral-100');
+            } else {
+                nav.classList.remove('bg-white/80', 'backdrop-blur-md', 'border-b', 'border-neutral-100');
+            }
+        });
+    });
+</script>

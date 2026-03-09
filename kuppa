@@ -1,0 +1,112 @@
+#!/usr/bin/env node
+
+const fs           = require('fs');
+const path         = require('path');
+const { execSync } = require('child_process');
+const crypto       = require('crypto');
+
+const args         = process.argv.slice(2);
+const command      = args[0];
+const coreCliPath  = path.join(process.cwd(), 'Core/Cli/Kuppa.js');
+const autoloadPath = path.join(process.cwd(), 'Core/Autoload.js');
+
+/**
+ * Helper: Get variable from .env
+ */
+const getEnv = (key, fallback) => {
+    const envPath = path.join(process.cwd(), '.env');
+    if (fs.existsSync(envPath)) {
+        const envContent = fs.readFileSync(envPath, 'utf8');
+        const lines = envContent.split('\n');
+        for (const line of lines) {
+            const [k, ...v] = line.split('=');
+            if (k && k.trim() === key) return v.join('=').trim();
+        }
+    }
+    return fallback;
+};
+
+/**
+ * Helper: Generate APP_KEY if not exists
+ */
+const generateAppKey = () => {
+    const envPath = path.join(process.cwd(), '.env');
+    if (!fs.existsSync(envPath)) return;
+
+    let envContent = fs.readFileSync(envPath, 'utf8');
+    // Don't overwrite if valid key exists
+    if (envContent.includes('APP_KEY=') && envContent.match(/APP_KEY=[a-f0-9]{64}/)) {
+        return; 
+    }
+
+    const newKey = crypto.randomBytes(32).toString('hex');
+    if (envContent.includes('APP_KEY=')) {
+        envContent = envContent.replace(/APP_KEY=.*/, `APP_KEY=${newKey}`);
+    } else {
+        envContent += `\nAPP_KEY=${newKey}`;
+    }
+
+    fs.writeFileSync(envPath, envContent);
+    console.log(`Kuppa: Application key [APP_KEY] set successfully.`);
+};
+
+const DEFAULT_REPO = "https://github.com/dnysaz/kuppa-core.git";
+const CORE_REPO = getEnv('KUPPA_CORE_REPO', DEFAULT_REPO);
+
+const syncCore = (isUpdate = false) => {
+    const corePath = path.join(process.cwd(), 'Core');
+    const tempPath = path.join(process.cwd(), 'temp_core_sync');
+    const envPath = path.join(process.cwd(), '.env');
+    const envExamplePath = path.join(process.cwd(), '.env.example');
+
+    console.log(isUpdate ? `Kuppa: Updating core engine...` : `Kuppa: Installing core engine...`);
+    console.log(`Source: ${CORE_REPO}`);
+
+    try {
+        // Clean up temp if exists
+        if (fs.existsSync(tempPath)) fs.rmSync(tempPath, { recursive: true, force: true });
+        
+        // Direct clone from default branch
+        execSync(`git clone --depth 1 ${CORE_REPO} "${tempPath}" --quiet`);
+        
+        // Replace existing core
+        if (fs.existsSync(corePath)) fs.rmSync(corePath, { recursive: true, force: true });
+        fs.renameSync(tempPath, corePath);
+        
+        // Remove .git to prevent nested repository issues
+        const gitInternal = path.join(corePath, '.git');
+        if (fs.existsSync(gitInternal)) fs.rmSync(gitInternal, { recursive: true, force: true });
+
+        console.log(`\x1b[32mKuppa: Core engine synchronized successfully.\x1b[0m`);
+
+        // Environment Setup
+        if (!fs.existsSync(envPath) && fs.existsSync(envExamplePath)) {
+            fs.copyFileSync(envExamplePath, envPath);
+            console.log('Kuppa: Created .env from .env.example.');
+        }
+
+        generateAppKey();
+
+    } catch (error) {
+        console.error(`\x1b[31mKuppa: Failed to synchronize core engine!\x1b[0m`);
+        console.error(`Check your internet connection or repository access.`);
+        if (fs.existsSync(tempPath)) fs.rmSync(tempPath, { recursive: true, force: true });
+    }
+};
+
+// --- Execution Logic ---
+if (command === 'run:install') {
+    syncCore(false);
+} else if (command === 'run:update') {
+    syncCore(true);
+} else {
+    // Check for core existence before running CLI
+    if (fs.existsSync(autoloadPath) && fs.existsSync(coreCliPath)) {
+        require(autoloadPath); 
+        require(coreCliPath);       
+    } else {
+        console.log('\x1b[31m[Kuppa Error]:\x1b[0m Core engine not found.');
+        console.log('Please run: \x1b[1mnode kuppa run:install\x1b[0m');
+        process.exit(1);
+    }
+}
